@@ -30,23 +30,48 @@ from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash
 from py4web.utils.url_signer import URLSigner
 from .models import get_user_email
+from py4web.utils.form import Form, FormStyleBulma
 
-from .settings import APP_FOLDER
-import os
-JSON_FILE = os.path.join(APP_FOLDER, "data", "table.json")
-import json
 url_signer = URLSigner(session)
 
-
-@action('index')
+@action('index') # /fixtures_example/index
 @action.uses('index.html', db, auth)
 def index():
-    ### You have to modify the code here as well.
-    headers = ['Bird Species', 'Weight', 'Diet', 'Habitat']
-    table=open(JSON_FILE)
-    table_row=json.load(table)
-    table.close()
-    return dict(
-        headers=headers,
-        table=table_row
-    )
+    rows = db(db.cars.created_by ).select()
+    return dict(rows=rows, url_signer=url_signer)
+
+@action('add', method=["GET", "POST"])
+@action.uses('add.html', db, session, auth.user)
+def add():
+    # Insert form: no record= in it.
+    form = Form(db.cars, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        # We simply redirect; the insertion already happened.
+        redirect(URL('index'))
+    # Either this is a GET request, or this is a POST but not accepted = with errors.
+    return dict(form=form)
+
+# This endpoint will be used for URLs of the form /edit/k where k is the product id.
+@action('edit/<cars_id:int>', method=["GET", "POST"])
+@action.uses('edit.html', db, session, auth.user)
+def edit(cars_id=None):
+    assert cars_id is not None
+    # We read the product being edited from the db.
+    # p = db(db.product.id == product_id).select().first()
+    p = db.cars[cars_id]
+    if p is None:
+        # Nothing found to be edited!
+        redirect(URL('index'))
+    # Edit form: it has record=
+    form = Form(db.cars, record=p, deletable=False, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        # The update already happened!
+        redirect(URL('index'))
+    return dict(form=form)
+
+@action('delete/<cars_id:int>')
+@action.uses(db, session, auth.user)
+def delete(cars_id=None):
+    assert cars_id is not None
+    db(db.cars.id == cars_id).delete()
+    redirect(URL('index'))
