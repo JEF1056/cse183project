@@ -16,7 +16,7 @@ APP_NAME = os.path.split(APP_FOLDER)[-1]
 DB_FOLDER = required_folder(APP_FOLDER, "databases")
 DB_URI = "mysql://root:root@104.7.65.205:3306/test?set_encoding =utf8mb4"
 DB_POOL_SIZE = 1
-DB_MIGRATE = True
+DB_MIGRATE = False
 DB_FAKE_MIGRATE = False  # maybe?
 
 # location where static files are stored:
