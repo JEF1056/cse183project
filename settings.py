@@ -7,7 +7,7 @@ This file is provided as an example:
 """
 import os
 
-from apps.cse183_project import settings_private
+from . import settings_private
 from py4web.core import required_folder
 
 password = settings_private.my_password
