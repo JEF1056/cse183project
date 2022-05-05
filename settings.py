@@ -6,17 +6,20 @@ This is an optional file that defined app level settings such as:
 This file is provided as an example:
 """
 import os
+
+from apps.cse183_project import settings_private
 from py4web.core import required_folder
 
+password = settings_private.my_password
 # db settings
 APP_FOLDER = os.path.dirname(__file__)
 APP_NAME = os.path.split(APP_FOLDER)[-1]
 # DB_FOLDER:    Sets the place where migration files will be created
 #               and is the store location for SQLite databases
 DB_FOLDER = required_folder(APP_FOLDER, "databases")
-DB_URI = "mysql://root:root@104.7.65.205:3306/test?set_encoding =utf8mb4"
+DB_URI = "mysql://root:"+password+"@sv.jfan.ml:3306/test?set_encoding =utf8mb4"
 DB_POOL_SIZE = 1
-DB_MIGRATE = False
+DB_MIGRATE = True
 DB_FAKE_MIGRATE = False  # maybe?
 
 # location where static files are stored:
@@ -90,6 +93,6 @@ CELERY_BROKER = "redis://localhost:6379/0"
 
 # try import private settings
 try:
-    from .settings_private import *
+    import settings_private
 except (ImportError, ModuleNotFoundError):
     pass
