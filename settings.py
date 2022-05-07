@@ -20,7 +20,11 @@ DB_FOLDER = required_folder(APP_FOLDER, "databases")
 DB_URI = "mysql://root:"+password+"@sv.jfan.ml:34563/test?set_encoding =utf8mb4"
     #"sqlite://storage.db"
 DB_POOL_SIZE = 1
+<<<<<<< HEAD
 DB_MIGRATE = True
+=======
+DB_MIGRATE = False
+>>>>>>> 57647c2e6247e9fcd8210da7aa23f16ca117bfae
 DB_FAKE_MIGRATE = False  # maybe?
 
 # location where static files are stored:
@@ -29,7 +33,11 @@ STATIC_FOLDER = required_folder(APP_FOLDER, "static")
 # location where to store uploaded files:
 UPLOAD_FOLDER = required_folder(APP_FOLDER, "uploads")
 
+<<<<<<< HEAD
 # send email on registration
+=======
+# send email on regstration
+>>>>>>> 57647c2e6247e9fcd8210da7aa23f16ca117bfae
 VERIFY_EMAIL = True
 
 # account requires to be approved ?

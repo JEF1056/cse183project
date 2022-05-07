@@ -43,7 +43,7 @@ def index():
     for r in rows:
         if r.car_brand not in res:
             res.append(r.car_brand)
-    return dict(res=res, rows=rows, url_signer=url_signer, search_url=URL('search', signer=url_signer),
+    return dict(res=res, rows=rows, url_signer=url_signer,
                 filter_url=URL('filter', signer=url_signer))
 
 
@@ -85,6 +85,7 @@ def delete(cars_id=None):
     db(db.cars.id == cars_id).delete()
     redirect(URL('index'))
 
+
 @action('filter')
 @action.uses()
 def filter():
@@ -124,11 +125,15 @@ def filter():
     results4 = db(db.cars.car_price <= max_price).select().as_list()
     results5 = db(db.cars.car_mileage >= min_mil).select().as_list()
     results6 = db(db.cars.car_mileage <= max_mil).select().as_list()
-    results7 = db(db.cars.car_model.contains(car_model)).select().as_list()
-    # print(results7)
     final = []
     final1 = []
     final2 = []
+    if car_model != "":
+        results7 = db(db.cars.car_model.contains(car_model)).select().as_list()
+        for h in results7:
+            final.append(h)
+    # print(results7)
+
     # list for how many times it shows
     final_count = [0] * 1000
     # all lists stored in final
@@ -146,8 +151,7 @@ def filter():
         final.append(f)
     for g in results6:
         final.append(g)
-    for h in results7:
-        final.append(h)
+
     # print(counter)
     # in case only one input value
     if counter == 1:
