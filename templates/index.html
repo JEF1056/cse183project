@@ -2,15 +2,20 @@
 
 <div class="section">
 
-  <a class="button is-success" href="[[=URL('add')]]">
+  <a class="button is-success" href="[[=URL('add_car')]]">
     <span class="icon"><i class="fa fa-plus"></i></span>
     <span>Add</span>
   </a>
 
+  <a class="button is-success" href="[[=URL('add_car')]]">
+    <span class="icon"><i class="fa fa-plus"></i></span>
+    <span>test</span>
+  </a>
+
   <div class="container">
-    <table class="table is-striped is-fullwidth">
+    <h1 class="title">Cars</h1>
+    <table class="table is-striped ">
       <tr>
-        <th>Id</th>
         <th>Brand</th>
         <th>Model</th>
         <th>Year</th>
@@ -18,38 +23,84 @@
         <th>Mileage</th>
         <th>Description</th>
         <th>Picture</th>
-        <th>Created By</th>
-        <th>Creation Date</th>
         <th></th>
         <th></th>
       </tr>
-      [[for row in rows:]]
-      <tr>
-        <td>[[=row.id]]</td>
-        <td>[[=row.car_brand]]</td>
-        <td>[[=row.car_model]]</td>
-        <td>[[=row.car_year]]</td>
-        <td>[[=row.car_price]]</td>
-        <td>[[=row.car_mileage]]</td>
-        <td>[[=row.car_description]]</td>
-        <td>[[=row.car_picture]]</td>
-        <td>[[=row.created_by]]</td>
-        <td>[[=row.creation_date]]</td>
+      <tr v-for="c in cars">
+        <td>{{c.car_brand}}</td>
+        <td>{{c.car_model}}</td>
+        <td>{{c.car_year}}</td>
+        <td>{{c.car_price}}</td>
+        <td>{{c.car_mileage}}</td>
+        <td>{{c.car_description}}</td>
         <td>
-          <a class="button" href="[[=URL('edit', row.id)]]">
-            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
-          </a>
+          <div class="section" id="vue-target" v-cloak>
+            <div class="field has-addons">
+              <p class="control">
+                <button v-if="file_path" class="button" @click="download_file"
+                    :class="{'disabled': !file_path}">
+                  <span class="icon" v-if="download_url">
+                  <i class="fa fa-download fa-fw"></i>
+                  </span>
+                  <span>{{file_info}}</span>
+                </button>
+                <button v-else class="button is-static">No file uploaded</button>
+              </p>
+            </div>
+          </div>
         </td>
-        <td>
-          <a class="button" href="[[=URL('delete', row.id)]]">
-            <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-          </a>
-        </td>
-      </tr>
-      [[pass]]
+      </tr> 
     </table>
   </div>
 
-
+  <!-- <div class="section" id="vue-target" v-cloak>
+    <div class="field has-addons">
+       <p class="control">
+        <div class="file is-info">
+          <label class="file-label">
+            <input class="file-input" type="file" @change="upload_file($event)">
+            <span class="file-cta">
+              <span class="file-icon">
+                <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
+                <i v-else class="fa fa-upload fa-fw"></i>
+              </span>
+              <span class="file-label">
+                <span v-if="!uploading">Upload new file</span>
+              </span>
+            </span>
+          </label>
+        </div>
+      </p> -->
+      <!-- <p class="control">
+        <button v-if="file_path" class="button" @click="download_file"
+                :class="{'disabled': !file_path}">
+          <span class="icon" v-if="download_url">
+            <i class="fa fa-download fa-fw"></i>
+          </span>
+          <span>{{file_info}}</span>
+        </button>
+        <button v-else class="button is-static">No file uploaded</button>
+      </p> --> 
+      <!-- <p class="control" v-if='file_path'>
+        <button class="button is-danger" @click="delete_file" :class="{'is-loading': deleting}">
+          <span v-if="delete_confirmation">Confirm deletion</span>
+          <i v-else class="fa fa-trash"></i>
+        </button>
+      </p> -->
+    </div>
+  </div>
+  
+  
+  [[block page_scripts]]
+  <!-- Loads the index-specific js for Vue -->
+  <script>
+    // let file_info_url = "[[=XML(file_info_url)]]";
+    // let obtain_gcs_url = "[[=XML(obtain_gcs_url)]]";
+    // let notify_url = "[[=XML(notify_url)]]";
+    // let delete_url = "[[=XML(delete_url)]]";
+    let add_car_url = "[[=XML(add_car_url)]]";
+  </script>
+  <script src="js/index.js"></script>
+  [[end]]
 
 </div>

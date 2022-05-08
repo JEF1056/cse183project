@@ -6,4 +6,42 @@
 
   [[=form]]
 
+  <div class="section" id="vue-target" v-cloak>
+    <div class="field has-addons">
+      <p class="control">
+        <div class="file is-info">
+          <label class="file-label">
+            <input class="file-input" type="file" @change="upload_file($event)">
+            <span class="file-cta">
+              <span class="file-icon">
+                <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
+                <i v-else class="fa fa-upload fa-fw"></i>
+              </span>
+              <span class="file-label">
+                <span v-if="!uploading">Upload new file</span>
+              </span>
+            </span>
+          </label>
+        </div>
+      </p> 
+      <p class="control" v-if='file_path'>
+        <button class="button is-danger" @click="delete_file" :class="{'is-loading': deleting}">
+          <span v-if="delete_confirmation">Confirm deletion</span>
+          <i v-else class="fa fa-trash"></i>
+        </button>
+      </p>
+    </div>
+  </div>
+
+  [[block page_scripts]]
+  <!-- Loads the index-specific js for Vue -->
+  <script>
+    let file_info_url = "[[=XML(file_info_url)]]";
+    let obtain_gcs_url = "[[=XML(obtain_gcs_url)]]";
+    let notify_url = "[[=XML(notify_url)]]";
+    let delete_url = "[[=XML(delete_url)]]";
+  </script>
+  <script src="js/index.js"></script>
+  [[end]]
+
 </div>
