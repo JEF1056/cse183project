@@ -40,24 +40,27 @@
         <input type="text" v-model="add_car_description" class="input">
       </div>
     </div>
-    <!-- <div class="field has-addons">
+    <div class="field has-addons">
       <p class="control">
-        <div class="file is-info">
-          <label class="file-label">
-            <input class="file-input" type="file" @change="upload_file($event)">
-            <span class="file-cta">
-              <span class="file-icon">
-                <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
-                <i v-else class="fa fa-upload fa-fw"></i>
+        <label class="label">Picture: </label>
+          <div class="control">
+          <div class="file is-info">
+            <label class="file-label">
+              <input class="file-input" type="file" @change="upload_file($event)">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
+                  <i v-else class="fa fa-upload fa-fw"></i>
+                </span>
+                <span class="file-label">
+                  <span v-if="!uploading">Upload new file</span>
+                </span>
               </span>
-              <span class="file-label">
-                <span v-if="!uploading">Upload new file</span>
-              </span>
-            </span>
-          </label>
+            </label>
+          </div>
         </div>
       </p>
-    </div> -->
+    </div>
     <div class="field">
       <div class="control">
         <input type="submit" @click="add_car" value="Add" class="button is-primary">

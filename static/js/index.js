@@ -45,6 +45,7 @@ let init = (app) => {
         add_car_model: "",
         add_car_year: "",
         add_car_price: null,
+        add_car_mileage: null,
         add_car_description: null,
         cars: [],
         file_name: null, // File name

@@ -43,7 +43,7 @@ db.define_table(
     Field('car_price', 'float', default=0.00, requires=IS_FLOAT_IN_RANGE(0, 1e6)),
     Field('car_mileage','integer',default=0,requires=IS_INT_IN_RANGE(0,1000000)),
     Field('car_description', 'text', requires=IS_NOT_EMPTY(), maxsize=2048),
-    Field('car_picture', 'upload', 'reference images', label="Car Picture"),
+    # Field('car_picture', 'upload', 'reference images', label="Car Picture"),
     Field('created_by', default=get_user_email),
     Field('creation_date', 'datetime', default=get_time),
 )

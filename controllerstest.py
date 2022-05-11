@@ -59,15 +59,15 @@ def index():
         rows=rows,
         #  url_signer=url_signer,
         add_car_url = URL('add_car', signer=url_signer),
-        file_info_url = URL('file_info', signer=url_signer),
-        obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
-        notify_url = URL('notify_upload', signer=url_signer),
-        delete_url = URL('notify_delete', signer=url_signer),
+        # file_info_url = URL('file_info', signer=url_signer),
+        # obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
+        # notify_url = URL('notify_upload', signer=url_signer),
+        # delete_url = URL('notify_delete', signer=url_signer),
         )
 
-@action('add_car_page')
-@action.uses('add.html', url_signer)
-def add_car_page():
+@action('add_car', method=["GET", "POST"])
+@action.uses('add.html', db, session, auth.user)
+def add_car():
     # id = db.cars.insert(
     #     car_brand=request.json.get('car_brand'),
     #     car_model=request.json.get('car_model'),
@@ -83,27 +83,12 @@ def add_car_page():
     # redirect(URL('index'))
     # Either this is a GET request, or this is a POST but not accepted = with errors.
     return dict(
-        # id=id,
-        add_car_url=URL('add_car', signer=url_signer),
+        id=id,
         # file_info_url = URL('file_info', signer=url_signer),
         # obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
         # notify_url = URL('notify_upload', signer=url_signer),
         # delete_url = URL('notify_delete', signer=url_signer),
         )
-
-@action('add_car', method="POST")
-@action.uses(db, session, auth.user)
-def add_car():
-  id = db.cars.insert(
-        car_brand=request.json.get('car_brand'),
-        car_model=request.json.get('car_model'),
-        car_year=request.json.get('car_year'),
-        car_price=request.json.get('car_price'),
-        car_mileage=request.json.get('car_milage'),
-        car_description=request.json.get('car_description')
-    )
-  return dict(
-    id=id)
 
 # This endpoint will be used for URLs of the form /edit/k where k is the product id.
 @action('edit/<cars_id:int>', method=["GET", "POST"])
@@ -122,7 +107,6 @@ def edit(cars_id=None):
         # The update already happened!
         redirect(URL('index'))
     return dict(form=form,
-            add_car_url=URL('add_car', signer=url_signer),
             file_info_url = URL('file_info', signer=url_signer),
             obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
             notify_url = URL('notify_upload', signer=url_signer),
