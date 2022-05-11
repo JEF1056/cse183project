@@ -85,7 +85,7 @@ def add_car_page():
     return dict(
         # id=id,
         add_car_url=URL('add_car', signer=url_signer),
-        # file_info_url = URL('file_info', signer=url_signer),
+        file_info_url = URL('file_info', signer=url_signer),
         # obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
         # notify_url = URL('notify_upload', signer=url_signer),
         # delete_url = URL('notify_delete', signer=url_signer),
@@ -142,7 +142,7 @@ def file_info():
     """Returns to the web app the information about the file currently
     uploaded, if any, so that the user can download it or replace it with
     another file if desired."""
-    
+
     row = db(db.images.owner == get_user_email()).select().first()
     # The file is present if the row is not None, and if the upload was
     # confirmed.  Otherwise, the file has not been confirmed as uploaded,
@@ -171,7 +171,7 @@ def file_info():
 @action('obtain_gcs', method="POST")
 @action.uses(url_signer.verify(), db)
 def obtain_gcs():
-    
+
     verb = request.json.get("action")
     if verb == "PUT":
         mimetype = request.json.get("mimetype", "")
@@ -181,7 +181,7 @@ def obtain_gcs():
         file_path = BUCKET + "/" + str(uuid.uuid1()) + extension
 
         mark_possible_upload(file_path)
-        upload_url = gcs_url(GCS_KEYS, file_path, verb="PUT", 
+        upload_url = gcs_url(GCS_KEYS, file_path, verb="PUT",
                                         content_type=mimetype)
 
         return dict(
@@ -235,14 +235,14 @@ def notify_upload():
 def notify_delete():
     file_path = request.json.get("file_path")
 
-    db((db.images.owner == get_user_email()) & 
+    db((db.images.owner == get_user_email()) &
         (db.images.file_path == file_path)).delete()
-    
+
     return dict()
 
 def delete_path(file_path):
 
-    try: 
+    try:
         bucket, id = os.path.split(file_path)
         gcs.delete(bucket[1:], id)
     except:
@@ -263,4 +263,4 @@ def mark_possible_upload(file_path):
         owner=get_user_email(),
         file_path=file_path,
         confirmed=False,
-    )   
+    )
