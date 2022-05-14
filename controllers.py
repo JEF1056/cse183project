@@ -27,17 +27,18 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures}) else your app w
 
 from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
-from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash
+from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash, Field
 from py4web.utils.url_signer import URLSigner
 from .models import get_user_email
 from py4web.utils.form import Form, FormStyleBulma
+from pydal.validators import *
 
 url_signer = URLSigner(session)
 
-@action('index')
-@action.uses(url_signer,'index.html',db, auth)
+@action('index')  # /fixtures_example/index
+@action.uses(url_signer, 'index.html', db, auth)
 def index():
-    return dict(url_signer = url_signer)
+    return dict(url_signer=url_signer)
 
 @action('back')
 @action.uses(db, session, auth)
@@ -52,6 +53,7 @@ def second_page():
     for r in rows:
         if r.car_brand not in res:
             res.append(r.car_brand)
+
     return dict(res=res, rows=rows, url_signer=url_signer,
                 filter_url=URL('filter', signer=url_signer))
 
@@ -125,7 +127,6 @@ def filter():
     max_mil = request.params.get("max_mil")
     if max_mil != "":
         counter += 1
-
     # get all lists
     results = db(db.cars.car_brand == selected).select().as_list()
     results1 = db(db.cars.car_year >= min_year).select().as_list()
@@ -192,3 +193,40 @@ def filter():
             if final_count[z] == counter - 1:
                 final2.append(final[z])
         return dict(results=final2)
+
+
+@action('add_bookmark/<cars_id:int>', method=["GET", "POST"])
+@action.uses('add_bookmark.html', db, session, auth.user, url_signer)
+def add_bookmark(cars_id=None):
+    assert cars_id is not None
+    form = Form([Field('user_email', requires=IS_NOT_EMPTY())], csrf_session=session, formstyle=(FormStyleBulma))
+    rows = db(db.cars.created_by).select().as_list()
+    a = False
+    for row in rows:
+        s = db((db.marked_by.cars_id == row['id']) & (db.marked_by.cars_id == cars_id)).select()
+        for r in s:
+            if r['users'] == get_user_email():
+                a = True
+    if form.accepted:
+        if a:
+            redirect(URL('add_bookmark', cars_id))
+        else:
+            db.marked_by.insert(
+                cars_id=cars_id,
+                users=form.vars['user_email']
+            )
+    # ok=users.users
+    return dict(form=form)
+
+
+@action('my_bookmarks/', method=["GET", "POST"])
+@action.uses('my_bookmarks.html', db, session, auth.user, url_signer)
+def my_bookmarks():
+    final22 = []
+    rows = db(db.cars.created_by).select().as_list()
+    for row in rows:
+        s = db(db.marked_by.cars_id == row['id']).select()
+        for r in s:
+            if r['users'] == get_user_email():
+                final22.append(row)
+    return dict(final22=final22)
