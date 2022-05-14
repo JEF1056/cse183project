@@ -65,7 +65,7 @@ def add():
     form = Form(db.cars, csrf_session=session, formstyle=FormStyleBulma)
     if form.accepted:
         # We simply redirect; the insertion already happened.
-        redirect(URL('index'))
+        redirect(URL('post_your_car'))
     # Either this is a GET request, or this is a POST but not accepted = with errors.
     return dict(form=form)
 
@@ -80,12 +80,12 @@ def edit(cars_id=None):
     p = db.cars[cars_id]
     if p is None:
         # Nothing found to be edited!
-        redirect(URL('index'))
+        redirect(URL('second_page'))
     # Edit form: it has record=
     form = Form(db.cars, record=p, deletable=False, csrf_session=session, formstyle=FormStyleBulma)
     if form.accepted:
         # The update already happened!
-        redirect(URL('index'))
+        redirect(URL('second_page'))
     return dict(form=form)
 
 
@@ -94,7 +94,7 @@ def edit(cars_id=None):
 def delete(cars_id=None):
     assert cars_id is not None
     db(db.cars.id == cars_id).delete()
-    redirect(URL('index'))
+    redirect(URL('second_page'))
 
 
 @action('filter')
@@ -230,3 +230,21 @@ def my_bookmarks():
             if r['users'] == get_user_email():
                 final22.append(row)
     return dict(final22=final22)
+
+@action('car_description_page')
+@action.uses(url_signer, 'car_description_page.html', db, auth.user)
+def car_description_page():
+  return dict(url_signer=url_signer)
+
+
+@action('post_your_car')
+@action.uses(url_signer, 'post_your_car.html', db, auth.user)
+def post_your_car():
+    res = []
+    rows = db(db.cars.created_by).select()
+    for r in rows:
+        if r.car_brand not in res:
+            res.append(r.car_brand)
+    return dict(res=res, rows=rows, url_signer=url_signer)
+
+

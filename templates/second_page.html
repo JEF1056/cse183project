@@ -1,17 +1,22 @@
 [[extend 'layout.html']]
 
-<div class="section">
+<head>
+
+</head>
+
+<div class="section has-background-grey-lighter">
   <style>
-[v-cloak] {
-     display: none;
-}
-</style>
+    [v-cloak] {display: none;}
+  </style>
 
-
+<!-- Filter functions on the right part -->
 <div class="section" id="vue-target" v-cloak>
-
+  <!-- Start of filter functions -->
   <div class="control block">
-    <b>Select A Car Make</b>
+    <div class="columns block is-mobile ">
+      <!-- TODO having problem that if the number of results increase the length of this column also increase -->
+      <div class="column is-one-fifth has-background-white">
+        <b>Select A Car Make</b>
     <select v-model="selected" name="selected" @change="filter">
       <option disabled value="">Select A Car Make</option>
       [[for r in res:]]
@@ -19,7 +24,7 @@
       [[pass]]
     </select>
     <br/>
-    <b>Select A Car Model</b>
+    <b>Type A Car Model</b>
       <input class="input" type="text" v-model="car_model" @keyup="filter"/>
     <br/>
     <b>Year</b>
@@ -36,12 +41,58 @@
       <input class="input" type="number" v-model="min_mil" @keyup="filter"/>
         <div>to</div>
           <input class="input" type="number" v-model="max_mil" @keyup="filter"/>
+      </div>
+      <!-- End of filter functions -->
+
+      <!-- Display filter results on the right part -->
+      <div class="column is-four-fifth">
+        <div v-for="y in results">
+
+          <!-- Card buttons to detail description page -->
+<!--          <a href="[[=URL('car_description_page')]]">-->
+
+            <div class="card">
+              <div class="card-content">
+                  <b class="is-size-4 is-italic"> {{y.car_year}} {{y.car_brand}} {{y.car_model}} </b>
+              </div>
+
+            <div class="card-image">
+              <div class="column">
+              <div class="columns block is-mobile">
+                <div class="column is-three-fifth">
+                    <figure class="image">
+                        <img src="https://i.ytimg.com/vi/bUVB0eB9d6Q/maxresdefault.jpg" alt="Placeholder image">
+                    </figure>
+                </div>
+
+                <div class="column is-two-fifth">
+                  <div class="card-content">
+                    <div class="content">
+                      <div class="block"><b> Price: </b>${{y.car_price}}</div>
+                      <div class="block"><b>Mileage: </b> {{y.car_mileage}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+              <!-- add bookmark button -->
+              <!-- TODO change it to BookMark to sign in user -->
+              <footer class="card-footer">
+                <p class="card-footer-item">
+                  <a href="[[=URL('car_description_page')]]" class="card-footer-item has-text-grey">MoreDetail</a>
+                  <a href="[[=URL('my_bookmarks')]]" class="card-footer-item has-text-grey">BookMark</a>
+                </p>
+              </footer>
+        </div>
+<!--            </a>-->
+        <!-- Start a new space for every car in every loop -->
+          <br>
+      </div>
+
+    </div>
   </div>
-
-  <div v-for="y in results">{{y}}</div>
 </div>
-
-
 
 
 [[block page_scripts]]
@@ -52,53 +103,6 @@
 </script>
 <script src="js/index.js"></script>
 [[end]]
-  <a class="button is-success" href="[[=URL('add')]]">
-    <span class="icon"><i class="fa fa-plus"></i></span>
-    <span>Add</span>
-  </a>
-  <div class="container">
-    <table class="table is-striped is-fullwidth">
-      <tr>
-        <th>Id</th>
-        <th>Brand</th>
-        <th>Model</th>
-        <th>Year</th>
-        <th>Price</th>
-        <th>Mileage</th>
-        <th>Description</th>
-        <th>Picture</th>
-        <th>Created By</th>
-        <th>Creation Date</th>
-        <th></th>
-        <th></th>
-      </tr>
-      [[for row in rows:]]
-      <tr>
-        <td>[[=row.id]]</td>
-        <td>[[=row.car_brand]]</td>
-        <td>[[=row.car_model]]</td>
-        <td>[[=row.car_year]]</td>
-        <td>[[=row.car_price]]</td>
-        <td>[[=row.car_mileage]]</td>
-        <td>[[=row.car_description]]</td>
-        <td>[[=row.car_picture]]</td>
-        <td>[[=row.created_by]]</td>
-        <td>[[=row.creation_date]]</td>
-        <td>
-          <a class="button" href="[[=URL('edit', row.id)]]">
-            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
-          </a>
-        </td>
-        <td>
-          <a class="button" href="[[=URL('delete', row.id)]]">
-            <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-          </a>
-        </td>
-      </tr>
-      [[pass]]
-    </table>
-  </div>
 
-
-
+</div>
 </div>
