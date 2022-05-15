@@ -12,46 +12,48 @@
     <span>Add</span>
   </a>
   <div class="container">
-    <table class="table is-striped is-fullwidth">
-      <tr>
-        <th>Id</th>
-        <th>Brand</th>
-        <th>Model</th>
-        <th>Year</th>
-        <th>Price</th>
-        <th>Mileage</th>
-        <th>Description</th>
-        <th>Picture</th>
-        <th>Created By</th>
-        <th>Creation Date</th>
-        <th></th>
-        <th></th>
-      </tr>
-      [[for row in rows:]]
-      <tr>
-        <td>[[=row.id]]</td>
-        <td>[[=row.car_brand]]</td>
-        <td>[[=row.car_model]]</td>
-        <td>[[=row.car_year]]</td>
-        <td>[[=row.car_price]]</td>
-        <td>[[=row.car_mileage]]</td>
-        <td>[[=row.car_description]]</td>
-        <td>[[=row.car_picture]]</td>
-        <td>[[=row.created_by]]</td>
-        <td>[[=row.creation_date]]</td>
-        <td>
-          <a class="button" href="[[=URL('edit', row.id)]]">
-            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
-          </a>
-        </td>
-        <td>
-          <a class="button" href="[[=URL('delete', row.id)]]">
-            <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-          </a>
-        </td>
-      </tr>
+    [[for row in rows:]]
+
+          <!-- Card buttons to detail description page -->
+<!--          <a href="[[=URL('car_description_page')]]">-->
+
+            <div class="card">
+              <div class="card-content">
+                  <b class="is-size-4 is-italic"> [[=row.car_year]] [[=row.car_brand]] [[=row.car_model]] </b>
+              </div>
+
+            <div class="card-image">
+              <div class="column">
+              <div class="columns block is-mobile">
+                <div class="column is-three-fifth">
+                    <figure class="image">
+                        <img src="https://i.ytimg.com/vi/bUVB0eB9d6Q/maxresdefault.jpg" alt="Placeholder image">
+                    </figure>
+                </div>
+
+                <div class="column is-two-fifth">
+                  <div class="card-content">
+                    <div class="content">
+                      <div class="block"><b> Price: </b>$[[=row.car_price]]</div>
+                      <div class="block"><b>Mileage: </b> [[=row.car_mileage]]</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+              <!-- add bookmark button -->
+              <!-- TODO change it to BookMark to sign in user -->
+              <footer class="card-footer">
+                <p class="card-footer-item">
+                  <a href="[[=URL('car_description_page')]]" class="card-footer-item has-text-grey">MoreDetail</a>
+                  <a href="[[=URL('my_bookmarks')]]" class="card-footer-item has-text-grey">BookMark</a>
+                </p>
+              </footer>
+
+        </div>
+      <br>
       [[pass]]
-    </table>
   </div>
 </body>
 </html>

@@ -5,13 +5,38 @@
 </head>
 
 <div class="section has-background-grey-lighter">
+  <!-- Using Breadcrumbs to show which page is current page -->
+  <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+    <ul>
+      <li>
+        <!-- Home Page Icon -->
+        <a href="[[=URL('index')]]">
+          <span class="icon is-small">
+          <i class="fa fa-fw fa-home" aria-hidden="true"></i>
+          </span>
+          <span>Home</span>
+        </a>
+      </li>
+
+      <!-- Used Cars Page Icon -->
+      <li class="is-active">
+        <a aria-current="page">
+          <span class="icon is-small">
+          <i class="fa fa-fw fa-car" aria-hidden="true"></i>
+          </span>
+          Used Cars
+        </a>
+      </li>
+    </ul>
+  </nav>
+
   <style>
     [v-cloak] {display: none;}
   </style>
 
 <!-- Filter functions on the right part -->
 <div class="section" id="vue-target" v-cloak>
-  <div v-for="x in results">{{x}}</div>
+
   <!-- Start of filter functions -->
   <div class="control block">
     <div class="columns block is-mobile ">
@@ -51,7 +76,6 @@
 
           <!-- Card buttons to detail description page -->
 <!--          <a href="[[=URL('car_description_page')]]">-->
-
             <div class="card">
               <div class="card-content">
                   <b class="is-size-4 is-italic has-text-info"> {{y.car_year}} {{y.car_brand}} {{y.car_model}} </b>
@@ -90,16 +114,61 @@
         <!-- Start a new space for every car in every loop -->
           <br>
       </div>
-
     </div>
   </div>
 </div>
 
+  <!-- For Debug use all the users can see all the result from the DB -->
+   <a class="button is-success" href="[[=URL('add')]]">
+    <span class="icon"><i class="fa fa-plus"></i></span>
+    <span>Add</span>
+  </a>
+  <div class="container">
+    <table class="table is-striped is-fullwidth">
+      <tr>
+        <th>Id</th>
+        <th>Brand</th>
+        <th>Model</th>
+        <th>Year</th>
+        <th>Price</th>
+        <th>Mileage</th>
+        <th>Description</th>
+        <th>Picture</th>
+        <th>Created By</th>
+        <th>Creation Date</th>
+        <th></th>
+        <th></th>
+      </tr>
+      [[for row in rows:]]
+      <tr>
+        <td>[[=row.id]]</td>
+        <td>[[=row.car_brand]]</td>
+        <td>[[=row.car_model]]</td>
+        <td>[[=row.car_year]]</td>
+        <td>[[=row.car_price]]</td>
+        <td>[[=row.car_mileage]]</td>
+        <td>[[=row.car_description]]</td>
+        <td>[[=row.car_picture]]</td>
+        <td>[[=row.created_by]]</td>
+        <td>[[=row.creation_date]]</td>
+        <td>
+          <a class="button" href="[[=URL('edit', row.id)]]">
+            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
+          </a>
+        </td>
+        <td>
+          <a class="button" href="[[=URL('delete', row.id)]]">
+            <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+          </a>
+        </td>
+      </tr>
+      [[pass]]
+    </table>
+  </div>
 
   [[block page_scripts]]
   <!-- Loads the index-specific js for Vue -->
   <script>
-
     let filter_url = "[[=XML(filter_url)]]";
     let load_cars = "[[=XML(load_cars)]]";
   </script>
@@ -109,9 +178,3 @@
 
   </div>
 </div>
-
-  <div class="footer has-background-info">
-    <div class="content has-text-centered">
-      <p> Copyright 2022 CarExpress Team</p>
-    </div>
-  </div>
