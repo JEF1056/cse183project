@@ -1,4 +1,4 @@
-[[extend 'layout.html']]
+[[extend 'auth_layout.html']]
 
 <html lang="en">
 <head>
@@ -14,7 +14,7 @@
   <div class="container">
     <table class="table is-striped is-fullwidth">
       <tr>
-<!--        <th>Id</th>-->
+        <th>Id</th>
         <th>Brand</th>
         <th>Model</th>
         <th>Year</th>
@@ -29,7 +29,7 @@
       </tr>
       [[for row in rows:]]
       <tr>
-<!--        <td>[[=row.id]]</td>-->
+        <td>[[=row.id]]</td>
         <td>[[=row.car_brand]]</td>
         <td>[[=row.car_model]]</td>
         <td>[[=row.car_year]]</td>

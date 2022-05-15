@@ -14,7 +14,7 @@
     <nav class="navbar is-info" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="[[=URL('index')]]">
-          Welcome to the website!
+          CarExpress
           <!-- <img class="logo" width="150" src="images/site_icon.png"> -->
         </a>
 
@@ -35,6 +35,8 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
+              <a class="button is-link" href="[[=URL('my_bookmarks')]]">bookmark</a>
+              <a class="button is-success" href="[[=URL('post_your_car')]]">post</a>
               [[if globals().get('user'):]]
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link is-primary">

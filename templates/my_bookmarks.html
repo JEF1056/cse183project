@@ -1,11 +1,61 @@
-[[extend 'layout.html']]
+[[extend 'auth_layout.html']]
 <!--Citation:https://stackoverflow.com/questions/31483655/how-to-select-specific-json-element-in-python -->
 <div class="section">
     <!-- Put the table here -->
-    <h1 class="title" style="margin-left: 70px;">My bookmarks</h1>
-    <div>[[=final22]]</div>
+    <div class="container">
+    <h1 class="title is-left">My bookmarks</h1>
     [[for final in final22:]]
+         <div class="card">
+              <div class="card-content">
+                  <b class="is-size-4 is-italic"> [[=final['car_year'] ]] [[=final['car_brand'] ]] [[=final['car_model'] ]] </b>
+              </div>
 
-    <div>[[=final]]</div>
+             <div class="card-image">
+              <div class="column">
+              <div class="columns block is-mobile">
+                <div class="column is-three-fifth">
+                    <figure class="image">
+                        <img src="https://i.ytimg.com/vi/bUVB0eB9d6Q/maxresdefault.jpg" alt="Placeholder image">
+                    </figure>
+                </div>
+
+                <div class="column is-two-fifth">
+                  <div class="card-content">
+                    <div class="content">
+                      <div class="block"><b> Price: </b>$[[=final['car_price'] ]]</div>
+                      <div class="block"><b>Mileage: </b>[[=final['car_mileage'] ]]</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+              <!-- add bookmark button -->
+              <!-- TODO change it to BookMark to sign in user -->
+              <footer class="card-footer">
+                <p class="card-footer-item">
+                  <a href="[[=URL('car_description_page')]]" class="card-footer-item has-text-grey">MoreDetail</a>
+                  <a href="[[=URL('my_bookmarks')]]" class="card-footer-item has-text-grey">BookMark</a>
+                </p>
+              </footer>
+        </div>
+        <!-- Start a new space for every car in every loop -->
+          <br>
     [[pass]]
+        </div>
 </div>
+
+<nav class="navbar" role="navigation" aria-label="dropdown navigation">
+  <div class="navbar-item has-dropdown is-hoverable">
+    <a class="navbar-link">
+      Docs
+    </a>
+
+    <div class="navbar-dropdown">
+      <a class="navbar-item">
+        Overview
+      </a>
+    </div>
+  </div>
+</nav>
+

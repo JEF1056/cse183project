@@ -73,6 +73,9 @@ let init = (app) => {
     app.init = () => {
         // Put here any initialization code.
         // Typically this is a server GET call to load the data.
+        axios.get(load_cars).then(function (response){
+            app.vue.results = app.enumerate(response.data.results);
+        })
     };
 
     // Call to the initializer.

@@ -1,4 +1,4 @@
-[[extend 'layout.html']]
+[[extend 'auth_layout.html']]
 
 <head>
 
@@ -11,6 +11,7 @@
 
 <!-- Filter functions on the right part -->
 <div class="section" id="vue-target" v-cloak>
+  <div v-for="x in results">{{x}}</div>
   <!-- Start of filter functions -->
   <div class="control block">
     <div class="columns block is-mobile ">
@@ -53,7 +54,7 @@
 
             <div class="card">
               <div class="card-content">
-                  <b class="is-size-4 is-italic"> {{y.car_year}} {{y.car_brand}} {{y.car_model}} </b>
+                  <b class="is-size-4 is-italic has-text-info"> {{y.car_year}} {{y.car_brand}} {{y.car_model}} </b>
               </div>
 
             <div class="card-image">
@@ -68,7 +69,7 @@
                 <div class="column is-two-fifth">
                   <div class="card-content">
                     <div class="content">
-                      <div class="block"><b> Price: </b>${{y.car_price}}</div>
+                      <div class="block"><h3> Price: ${{y.car_price}}</h3></div>
                       <div class="block"><b>Mileage: </b> {{y.car_mileage}}</div>
                     </div>
                   </div>
@@ -95,14 +96,22 @@
 </div>
 
 
-[[block page_scripts]]
-<!-- Loads the index-specific js for Vue -->
-<script>
+  [[block page_scripts]]
+  <!-- Loads the index-specific js for Vue -->
+  <script>
 
-  let filter_url = "[[=XML(filter_url)]]";
-</script>
-<script src="js/index.js"></script>
-[[end]]
+    let filter_url = "[[=XML(filter_url)]]";
+    let load_cars = "[[=XML(load_cars)]]";
+  </script>
 
+  <script src="js/index.js"></script>
+  [[end]]
+
+  </div>
 </div>
-</div>
+
+  <div class="footer has-background-info">
+    <div class="content has-text-centered">
+      <p> Copyright 2022 CarExpress Team</p>
+    </div>
+  </div>

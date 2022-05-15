@@ -55,7 +55,8 @@ def second_page():
             res.append(r.car_brand)
 
     return dict(res=res, rows=rows, url_signer=url_signer,
-                filter_url=URL('filter', signer=url_signer))
+                filter_url=URL('filter', signer=url_signer),
+                load_cars=URL('load_cars', signer=url_signer))
 
 
 @action('add', method=["GET", "POST"])
@@ -96,6 +97,11 @@ def delete(cars_id=None):
     db(db.cars.id == cars_id).delete()
     redirect(URL('second_page'))
 
+@action('load_cars')
+@action.uses(db)
+def load_cars():
+    rows = db(db.cars).select()
+    return dict(results=rows)
 
 @action('filter')
 @action.uses()
