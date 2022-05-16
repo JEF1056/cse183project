@@ -24,14 +24,15 @@ The path follows the bottlepy syntax.
 session, db, T, auth, and tempates are examples of Fixtures.
 Warning: Fixtures MUST be declared with @action.uses({fixtures}) else your app will result in undefined behavior
 """
+from yatl.helpers import A
+from pydal.validators import *
 
 from py4web import action, request, abort, redirect, URL
-from yatl.helpers import A
-from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash, Field
 from py4web.utils.url_signer import URLSigner
-from .models import get_user_email
 from py4web.utils.form import Form, FormStyleBulma
-from pydal.validators import *
+
+from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash, Field
+from .models import get_user_email, get_user, get_last_name, get_first_name
 
 url_signer = URLSigner(session)
 
@@ -86,7 +87,7 @@ def edit(cars_id=None):
     form = Form(db.cars, record=p, deletable=False, csrf_session=session, formstyle=FormStyleBulma)
     if form.accepted:
         # The update already happened!
-        redirect(URL('second_page'))
+        redirect(URL('post_your_car'))
     return dict(form=form)
 
 
@@ -95,7 +96,7 @@ def edit(cars_id=None):
 def delete(cars_id=None):
     assert cars_id is not None
     db(db.cars.id == cars_id).delete()
-    redirect(URL('second_page'))
+    redirect(URL('post_your_car'))
 
 @action('load_cars')
 @action.uses(db)
@@ -237,12 +238,13 @@ def my_bookmarks():
                 final22.append(row)
     return dict(final22=final22)
 
+# TODO Just a blank page
 @action('car_description_page')
 @action.uses(url_signer, 'car_description_page.html', db, auth.user)
 def car_description_page():
   return dict(url_signer=url_signer)
 
-
+# TODO Still in progress
 @action('post_your_car')
 @action.uses(url_signer, 'post_your_car.html', db, auth.user)
 def post_your_car():
@@ -251,6 +253,114 @@ def post_your_car():
     for r in rows:
         if r.car_brand not in res:
             res.append(r.car_brand)
-    return dict(res=res, rows=rows, url_signer=url_signer)
+
+    first_name = get_first_name()
+    last_name = get_last_name()
+
+    return dict(res=res, rows=rows, first_name=first_name, last_name=last_name, url_signer=url_signer)
+
+# TODO not finished yet
+# ---------------------------------  For feedback page use: ---------------------------------
+@action('feedback')
+@action.uses('feedback.html', db, auth, auth.user, url_signer)
+def chat_page():
+
+    return dict(
+        user_email = get_user_email(),
+        load_posts_url = URL('load_posts', signer=url_signer),
+        add_post_url = URL('add_post', signer=url_signer),
+        delete_post_url = URL('delete_post', signer=url_signer),
+        get_likes_url = URL('get_likes', signer=url_signer),
+        set_like_url = URL('set_like', signer=url_signer),
+        get_likers_url = URL('get_likers', signer=url_signer),
+    )
+
+# load posts
+@action('load_posts')
+@action.uses(url_signer.verify(), db)
+def load_posts():
+    rows = db(db.posts).select().as_list()
+    return dict(rows=rows)
+
+# add posts
+@action('add_post', method="POST")
+@action.uses(url_signer.verify(), db, auth.user)
+def add_post():
+    id = db.posts.insert(
+        post=request.json.get('post'),
+    )
+    # get the name of the author
+    r = db(db.auth_user.email == get_user_email()).select().first()
+    first_name = r.first_name
+    last_name = r.last_name
+    user_email = get_user_email()
+    return dict(id=id, first_name=first_name, last_name=last_name, user_email=user_email)
+
+@action('delete_post')
+@action.uses(url_signer.verify(), db)
+def delete_post():
+    id = request.params.get('id')
+    assert id is not None
+    db(db.posts.id == id).delete()
+    return "ok"
+
+@action('get_likes')
+@action.uses(url_signer.verify(), db, auth.user)
+def get_likes():
+    post_id = request.params.get('post_id')
+    row = db((db.likes.post == post_id) &
+             (db.likes.user == get_user())).select().first()
+    like = row.like if row is not None else 0
+    dislike = row.dislike if row is not None else 0
+    return dict(like=like, dislike=dislike)
+
+@action('set_like', method='POST')
+@action.uses(url_signer.verify(), db, auth.user)
+def set_like():
+    post_id = request.json.get('post_id')
+    like = request.json.get('like')
+    dislike = request.json.get('dislike')
+    assert post_id is not None and like is not None
+    db.likes.update_or_insert(
+        ((db.likes.post == post_id) & (db.likes.user == get_user())),
+        post=post_id,
+        user=get_user(),
+        like=like,
+        dislike=dislike
+    )
+    return "ok"
+
+@action('get_likers')
+@action.uses(url_signer.verify(), db)
+def get_likers():
+    post_id = request.params.get('post_id')
+    like_list = ""
+    likes = db((db.likes.post == post_id) & (db.likes.like == True)).select()
+    for row in likes:
+        like_list += row.user.first_name + " " + row.user.last_name
+        if (row == likes[-1]):
+            break
+        else:
+            like_list += ", "
+
+    dislike_list = ""
+    dislikes = db((db.likes.post == post_id) & (db.likes.dislike == True)).select()
+    for row in dislikes:
+        dislike_list += row.user.first_name + " " + row.user.last_name
+        if (row == dislikes[-1]):
+            break
+        else:
+            dislike_list += ", "
+
+    final_sentence = ""
+    if like_list != "":
+        final_sentence += "Liked by " + like_list
+    if dislike_list != "":
+        if like_list != "":
+            final_sentence += ", Disliked by " + dislike_list
+        else:
+            final_sentence += "Disliked by " + dislike_list
+    return dict(final_sentence=final_sentence)
+# --------------------------------- End feedback page ---------------------------------
 
 
