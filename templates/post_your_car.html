@@ -1,16 +1,30 @@
 [[extend 'auth_layout.html']]
-<!--Citation:https://stackoverflow.com/questions/31483655/how-to-select-specific-json-element-in-python -->
-<div class="section">
-    <!-- Put the table here -->
-    <div class="container">
-    <h1 class="title is-left">My bookmarks</h1>
-    [[for final in final22:]]
-         <div class="card">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+  <div class = "title">Cars posted by [[=first_name]] [[=last_name]]</div>
+  <a class="button is-success" href="[[=URL('add')]]">
+    <span class="icon"><i class="fa fa-plus"></i></span>
+    <span>Add</span>
+  </a>
+  <div class="container">
+    [[for row in rows:]]
+
+          <!-- Card buttons to detail description page -->
+<!--          <a href="[[=URL('car_description_page')]]">-->
+
+            <div class="card">
               <div class="card-content">
-                  <b class="is-size-4 is-italic"> [[=final['car_year'] ]] [[=final['car_brand'] ]] [[=final['car_model'] ]] </b>
+                  <b class="is-size-4 is-italic"> [[=row.car_year]] [[=row.car_brand]] [[=row.car_model]] </b>
               </div>
 
-             <div class="card-image">
+            <div class="card-image">
               <div class="column">
               <div class="columns block is-mobile">
                 <div class="column is-three-fifth">
@@ -22,8 +36,8 @@
                 <div class="column is-two-fifth">
                   <div class="card-content">
                     <div class="content">
-                      <div class="block"><b> Price: </b>$[[=final['car_price'] ]]</div>
-                      <div class="block"><b>Mileage: </b>[[=final['car_mileage'] ]]</div>
+                      <div class="block"><b> Price: </b>$[[=row.car_price]]</div>
+                      <div class="block"><b>Mileage: </b> [[=row.car_mileage]]</div>
                     </div>
                   </div>
                 </div>
@@ -38,10 +52,14 @@
                   <a href="[[=URL('my_bookmarks')]]" class="card-footer-item has-text-grey">BookMark</a>
                 </p>
               </footer>
-        </div>
-        <!-- Start a new space for every car in every loop -->
-          <br>
-    [[pass]]
-        </div>
-</div>
 
+        </div>
+      <br>
+      [[pass]]
+  </div>
+  <a class="button is-warning" href="[[=URL('second_page')]]">
+    <span class="icon"><i class="fa fa-fw fa-backward"></i></span>
+    <span>back</span>
+  </a>
+</body>
+</html>

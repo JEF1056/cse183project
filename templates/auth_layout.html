@@ -14,7 +14,9 @@
     <nav class="navbar is-info" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="[[=URL('index')]]">
-          Welcome to the website!
+          <figure class="image is-256x256">
+            <img src=../static/Images/logo2.png>
+          </figure>
           <!-- <img class="logo" width="150" src="images/site_icon.png"> -->
         </a>
 
@@ -35,10 +37,19 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
+              <a class="navbar-item" href="[[=URL('my_bookmarks')]]">
+                <span class="icon"><i class="fa fa-fw fa-bookmark"></i></span>
+                <span>Mybookmark</span>
+              </a>
+              <a class="navbar-item" href="[[=URL('post_your_car')]]">
+                <span class="icon"><i class="fa fa-fw fa-heart"></i></span>
+                <span>Mypost</span>
+              </a>
               [[if globals().get('user'):]]
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link is-primary">
-                    [[=globals().get('user').get('email')]]
+                    <span class="icon"><i class="fa fa-fw fa-user-circle"></i></span>
+                    <span>[[=globals().get('user').get('first_name')]] [[=globals().get('user').get('last_name')]]</span>
                   </a>
                   <div class="navbar-dropdown">
                     <a class="navbar-item" href="[[=URL('auth/logout')]]">Logout</a>
@@ -48,8 +59,8 @@
                   </div>
                 </div>
               [[else:]]
-                <a class="button is-link" href="[[=URL('auth/register')]]">Sign up</a>
-                <a class="button is-success" href="[[=URL('auth/login')]]">Log in</a>
+                <a class="navbar-item" href="[[=URL('auth/register')]]">Sign up</a>
+                <a class="navbar-item" href="[[=URL('auth/login')]]">Log in</a>
               [[pass]]
             </div>
           </div>

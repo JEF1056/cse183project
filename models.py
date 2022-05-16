@@ -14,6 +14,11 @@ todays_date = date.today()
 def get_user_email():
     return auth.current_user.get('email') if auth.current_user else None
 
+def get_user_first_name():
+    return auth.current_user.get('first_name') if auth.current_user else None
+
+def get_user_last_name():
+    return auth.current_user.get('last_name') if auth.current_user else None
 
 def get_time():
     return datetime.datetime.utcnow()
