@@ -36,6 +36,8 @@ db.define_table(
     Field('car_mileage', 'integer', default=0, requires=IS_INT_IN_RANGE(0, 1000000)),
     Field('car_description', 'text', requires=IS_LENGTH(maxsize=2048)),
     Field('car_picture'),
+    Field('car_city'),
+    Field('car_zip'),
     Field('created_by', default=get_user_email),
     Field('creation_date', 'datetime', default=get_time),
 )

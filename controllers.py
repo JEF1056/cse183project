@@ -36,6 +36,8 @@ from .models import get_user_email, get_user, get_last_name, get_first_name
 
 url_signer = URLSigner(session)
 
+ID = None
+
 @action('index')  # /fixtures_example/index
 @action.uses(url_signer, 'index.html', db, auth)
 def index():
@@ -57,20 +59,59 @@ def second_page():
 
     return dict(res=res, rows=rows, url_signer=url_signer,
                 filter_url=URL('filter', signer=url_signer),
-                load_cars=URL('load_cars', signer=url_signer))
+                load_cars=URL('load_cars', signer=url_signer),
+                )
 
 
-@action('add', method=["GET", "POST"])
-@action.uses('add.html', db, session, auth.user, url_signer)
+@action('add')
+@action.uses('add.html', auth.user, session)
 def add():
-    # Insert form: no record= in it.
-    form = Form(db.cars, csrf_session=session, formstyle=FormStyleBulma)
-    if form.accepted:
-        # We simply redirect; the insertion already happened.
-        redirect(URL('post_your_car'))
-    # Either this is a GET request, or this is a POST but not accepted = with errors.
-    return dict(form=form)
+  return dict(
+    add_car_url=URL('add_car', signer=url_signer),
+    # load_cars_info=URL('load_cars_info', signer=url_signer),  
+    upload_pic_url=URL('upload_pic', signer=url_signer)
+  )
 
+@action('add_car', method="POST")
+@action.uses(db, auth.user, session, url_signer.verify())
+def add_car():
+  # redirect(URL('upload_image.html'))
+  print("here")
+  id = db.cars.insert(
+        car_brand=request.json.get('car_brand'),
+        car_model=request.json.get('car_model'),
+        car_year=request.json.get('car_year'),
+        car_price=request.json.get('car_price'),
+        car_mileage=request.json.get('car_mileage'),
+        car_description=request.json.get('car_description'),
+        car_picture=request.json.get('car_picture'),
+        car_city=request.json.get('car_city'),
+        car_zip=request.json.get('car_zip'),
+    )
+  # redirect(URL('upload_image'))
+  ID = id
+  return dict(
+    id=id,
+  )
+    # load_cars_info=URL('load_cars_info', signer=url_signer),
+    # upload_pic_url=URL('upload_pic', signer=url_signer))
+
+@action('upload_image')
+@action.uses('upload_image.html', auth.user, session)
+def upload_image():
+  return dict(
+    load_cars_info=URL('load_cars_info', signer=url_signer),
+    upload_pic_url=URL('upload_pic', signer=url_signer),
+  )
+
+@action('upload_pic', method="POST")
+@action.uses(url_signer.verify(), db, 'second_page.html')
+def upload_pic():
+  cars_id=request.json.get("cars_id")
+  car_picture=request.json.get("car_picture")
+
+  db(db.cars.id == cars_id).update(car_picture=car_picture)
+  return "gg"
 
 # This endpoint will be used for URLs of the form /edit/k where k is the product id.
 @action('edit/<cars_id:int>', method=["GET", "POST"])
@@ -82,7 +123,7 @@ def edit(cars_id=None):
     p = db.cars[cars_id]
     if p is None:
         # Nothing found to be edited!
-        redirect(URL('second_page'))
+        redirect(URL('`second_page`'))
     # Edit form: it has record=
     form = Form(db.cars, record=p, deletable=False, csrf_session=session, formstyle=FormStyleBulma)
     if form.accepted:
@@ -103,6 +144,15 @@ def delete(cars_id=None):
 def load_cars():
     rows = db(db.cars).select()
     return dict(results=rows)
+
+@action('load_cars_info')
+@action.uses( db)
+def load_cars_info():
+  cars = db(db.cars.id==ID).select()
+  print("cars ", cars)
+  return dict(
+    cars=cars
+  )
 
 @action('filter')
 @action.uses()
