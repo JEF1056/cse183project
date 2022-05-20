@@ -57,6 +57,19 @@
                     <b>Type A Car Model</b>
                     <input class="input" type="text" v-model="car_model" @keyup="filter"/>
                     <br/>
+                    <b>Location</b>
+                    <select v-model="range" name="range" @change="filter">
+                        <option disabled value="">Within</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>150</option>
+                        <option>200</option>
+                        <option>250</option>
+                        <option>500</option>
+                    </select>
+                    <b> miles of </b>
+                    <input class="input" type="number" v-model="city" @keyup="filter"/>
+                    <br/>
 
                     <b>Year</b>
                     <input class="input" type="number" v-model="min_year" @keyup="filter"/>
@@ -86,7 +99,7 @@
                         <div class="card">
                             <div class="card-content">
                                 <b class="is-size-4 is-italic has-text-info"> {{y.car_year}} {{y.car_brand}}
-                                    {{y.car_model}} </b>
+                                    {{y.car_model}}</b>
                             </div>
 
                             <div class="card-image">
@@ -114,7 +127,8 @@
                             <!-- TODO edit BookMark -->
                             <footer class="card-footer">
                                 <p class="card-footer-item">
-                                    <a href="[[=URL('car_description_page')]]" class="card-footer-item has-text-grey">
+
+                                    <a href="[[=URL('car_description_page',1)]]" class="card-footer-item has-text-grey">
                                         <span class="icon"><i class="fa fa-fw fa-info"></i></span>
                                         <span>MoreDetail</span>
                                     </a>

@@ -10,6 +10,8 @@ let init = (app) => {
         // Complete as you see fit.
         query: "",
         results: [],
+        range: "",
+        city: "",
         min_year: "",
         max_year: "",
         selected: "",
@@ -33,11 +35,13 @@ let init = (app) => {
     app.filter = function () {
         if (app.vue.selected.length > 1 || app.vue.min_year.length > 1 || app.vue.max_year.length > 1 ||
             app.vue.car_model.length > 1 || app.vue.min_price.length > 1 || app.vue.max_price.length > 1 ||
-            app.vue.min_mil.length > 1 || app.vue.max_mil.length > 1
+            app.vue.min_mil.length > 1 || app.vue.max_mil.length > 1 || app.vue.range.length>1 && app.vue.city.length>1
         ) {
             axios.get(filter_url, {
                 params: {
                     s: app.vue.selected,
+                    city: app.vue.city,
+                    range: app.vue.range,
                     min_year: app.vue.min_year,
                     max_year: app.vue.max_year,
                     car_model: app.vue.car_model,

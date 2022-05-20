@@ -33,20 +33,24 @@ from py4web.utils.form import Form, FormStyleBulma
 
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash, Field
 from .models import get_user_email, get_user, get_last_name, get_first_name
+from pgeocode import GeoDistance
 
 url_signer = URLSigner(session)
 
 ID = None
+
 
 @action('index')  # /fixtures_example/index
 @action.uses(url_signer, 'index.html', db, auth)
 def index():
     return dict(url_signer=url_signer)
 
+
 @action('back')
 @action.uses(db, session, auth)
 def back():
     redirect(URL('index'))
+
 
 @action('second_page')  # /fixtures_example/index
 @action.uses(url_signer, 'second_page.html', db, auth.user)
@@ -66,18 +70,19 @@ def second_page():
 @action('add')
 @action.uses('add.html', auth.user, session)
 def add():
-  return dict(
-    add_car_url=URL('add_car', signer=url_signer),
-    # load_cars_info=URL('load_cars_info', signer=url_signer),  
-    upload_pic_url=URL('upload_pic', signer=url_signer)
-  )
+    return dict(
+        add_car_url=URL('add_car', signer=url_signer),
+        # load_cars_info=URL('load_cars_info', signer=url_signer),
+        upload_pic_url=URL('upload_pic', signer=url_signer)
+    )
+
 
 @action('add_car', method="POST")
 @action.uses(db, auth.user, session, url_signer.verify())
 def add_car():
-  # redirect(URL('upload_image.html'))
-  print("here")
-  id = db.cars.insert(
+    # redirect(URL('upload_image.html'))
+    print("here")
+    id = db.cars.insert(
         car_brand=request.json.get('car_brand'),
         car_model=request.json.get('car_model'),
         car_year=request.json.get('car_year'),
@@ -88,30 +93,33 @@ def add_car():
         car_city=request.json.get('car_city'),
         car_zip=request.json.get('car_zip'),
     )
-  # redirect(URL('upload_image'))
-  ID = id
-  return dict(
-    id=id,
-  )
+    # redirect(URL('upload_image'))
+    ID = id
+    return dict(
+        id=id,
+    )
     # load_cars_info=URL('load_cars_info', signer=url_signer),
     # upload_pic_url=URL('upload_pic', signer=url_signer))
+
 
 @action('upload_image')
 @action.uses('upload_image.html', auth.user, session)
 def upload_image():
-  return dict(
-    load_cars_info=URL('load_cars_info', signer=url_signer),
-    upload_pic_url=URL('upload_pic', signer=url_signer),
-  )
+    return dict(
+        load_cars_info=URL('load_cars_info', signer=url_signer),
+        upload_pic_url=URL('upload_pic', signer=url_signer),
+    )
+
 
 @action('upload_pic', method="POST")
 @action.uses(url_signer.verify(), db, 'second_page.html')
 def upload_pic():
-  cars_id=request.json.get("cars_id")
-  car_picture=request.json.get("car_picture")
+    cars_id = request.json.get("cars_id")
+    car_picture = request.json.get("car_picture")
 
-  db(db.cars.id == cars_id).update(car_picture=car_picture)
-  return "gg"
+    db(db.cars.id == cars_id).update(car_picture=car_picture)
+    return "gg"
+
 
 # This endpoint will be used for URLs of the form /edit/k where k is the product id.
 @action('edit/<cars_id:int>', method=["GET", "POST"])
@@ -139,20 +147,23 @@ def delete(cars_id=None):
     db(db.cars.id == cars_id).delete()
     redirect(URL('post_your_car'))
 
+
 @action('load_cars')
 @action.uses(db)
 def load_cars():
     rows = db(db.cars).select()
     return dict(results=rows)
 
+
 @action('load_cars_info')
-@action.uses( db)
+@action.uses(db)
 def load_cars_info():
-  cars = db(db.cars.id==ID).select()
-  print("cars ", cars)
-  return dict(
-    cars=cars
-  )
+    cars = db(db.cars.id == ID).select()
+    print("cars ", cars)
+    return dict(
+        cars=cars
+    )
+
 
 @action('filter')
 @action.uses()
@@ -165,6 +176,10 @@ def filter():
         counter = counter + 1
     car_model = request.params.get("car_model")
     if car_model != "":
+        counter = counter + 1
+    car_city = request.params.get("city")
+    car_range = request.params.get("range")
+    if car_range != "" and car_city != "":
         counter = counter + 1
     min_year = request.params.get("min_year")
     if min_year != "":
@@ -184,6 +199,18 @@ def filter():
     max_mil = request.params.get("max_mil")
     if max_mil != "":
         counter += 1
+    final = []
+    final1 = []
+    final2 = []
+    all_car = db(db.cars.created_by).select()
+    dist = GeoDistance('us')
+    for x in all_car:
+        cal_distence = dist.query_postal_code(car_city,x.car_city)
+        if car_range != "":
+            if cal_distence*0.621371 <= int(car_range):
+                y = db(db.cars.car_city == x.car_city).select().as_list()
+                for a in y:
+                    final.append(a)
     # get all lists
     results = db(db.cars.car_brand == selected).select().as_list()
     results1 = db(db.cars.car_year >= min_year).select().as_list()
@@ -192,9 +219,7 @@ def filter():
     results4 = db(db.cars.car_price <= max_price).select().as_list()
     results5 = db(db.cars.car_mileage >= min_mil).select().as_list()
     results6 = db(db.cars.car_mileage <= max_mil).select().as_list()
-    final = []
-    final1 = []
-    final2 = []
+
     if car_model != "":
         results7 = db(db.cars.car_model.contains(car_model)).select().as_list()
         for h in results7:
@@ -202,7 +227,7 @@ def filter():
     # print(results7)
 
     # list for how many times it shows
-    final_count = [0] * 1000
+    final_count = [0] * 10000
     # all lists stored in final
     for a in results:
         final.append(a)
@@ -288,11 +313,13 @@ def my_bookmarks():
                 final22.append(row)
     return dict(final22=final22)
 
+
 # TODO Just a blank page
 @action('car_description_page')
 @action.uses(url_signer, 'car_description_page.html', db, auth.user)
 def car_description_page():
-  return dict(url_signer=url_signer)
+    return dict(url_signer=url_signer)
+
 
 # TODO Still in progress
 @action('post_your_car')
@@ -307,23 +334,24 @@ def post_your_car():
     first_name = get_first_name()
     last_name = get_last_name()
 
-    return dict(res=res, rows=rows, first_name=first_name, last_name=last_name, url_signer=url_signer)
+    return dict(res=res, rows=rows, first_name=first_name, last_name=last_name, url_signer=url_signer, )
+
 
 # TODO not finished yet
 # ---------------------------------  For feedback page use: ---------------------------------
 @action('feedback')
 @action.uses('feedback.html', db, auth, auth.user, url_signer)
 def chat_page():
-
     return dict(
-        user_email = get_user_email(),
-        load_posts_url = URL('load_posts', signer=url_signer),
-        add_post_url = URL('add_post', signer=url_signer),
-        delete_post_url = URL('delete_post', signer=url_signer),
-        get_likes_url = URL('get_likes', signer=url_signer),
-        set_like_url = URL('set_like', signer=url_signer),
-        get_likers_url = URL('get_likers', signer=url_signer),
+        user_email=get_user_email(),
+        load_posts_url=URL('load_posts', signer=url_signer),
+        add_post_url=URL('add_post', signer=url_signer),
+        delete_post_url=URL('delete_post', signer=url_signer),
+        get_likes_url=URL('get_likes', signer=url_signer),
+        set_like_url=URL('set_like', signer=url_signer),
+        get_likers_url=URL('get_likers', signer=url_signer),
     )
+
 
 # load posts
 @action('load_posts')
@@ -331,6 +359,7 @@ def chat_page():
 def load_posts():
     rows = db(db.posts).select().as_list()
     return dict(rows=rows)
+
 
 # add posts
 @action('add_post', method="POST")
@@ -346,6 +375,7 @@ def add_post():
     user_email = get_user_email()
     return dict(id=id, first_name=first_name, last_name=last_name, user_email=user_email)
 
+
 @action('delete_post')
 @action.uses(url_signer.verify(), db)
 def delete_post():
@@ -353,6 +383,7 @@ def delete_post():
     assert id is not None
     db(db.posts.id == id).delete()
     return "ok"
+
 
 @action('get_likes')
 @action.uses(url_signer.verify(), db, auth.user)
@@ -363,6 +394,7 @@ def get_likes():
     like = row.like if row is not None else 0
     dislike = row.dislike if row is not None else 0
     return dict(like=like, dislike=dislike)
+
 
 @action('set_like', method='POST')
 @action.uses(url_signer.verify(), db, auth.user)
@@ -379,6 +411,7 @@ def set_like():
         dislike=dislike
     )
     return "ok"
+
 
 @action('get_likers')
 @action.uses(url_signer.verify(), db)
@@ -412,5 +445,3 @@ def get_likers():
             final_sentence += "Disliked by " + dislike_list
     return dict(final_sentence=final_sentence)
 # --------------------------------- End feedback page ---------------------------------
-
-
