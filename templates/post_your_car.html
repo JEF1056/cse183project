@@ -7,10 +7,8 @@
 </head>
 
 <body>
-
-  <div class="container">
-      <div class = "title">Cars posted by [[=first_name]] [[=last_name]]</div>
-      <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+    <div class="section">
+        <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
           <ul>
               <!-- Home Page Icon -->
               <li>
@@ -42,6 +40,12 @@
               </li>
           </ul>
       </nav>
+    </div>
+
+
+  <div class="container">
+
+      <div class = "title">Cars posted by [[=first_name]] [[=last_name]]</div>
 
       <div class = "block">
           <a class="button is-success" href="[[=URL('add')]]">
@@ -110,7 +114,7 @@
 
       <a class="button is-warning" href="[[=URL('second_page')]]">
         <span class="icon"><i class="fa fa-fw fa-backward"></i></span>
-        <span>back</span>
+        <span>Back</span>
       </a>
 
 

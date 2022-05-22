@@ -172,6 +172,41 @@ tr:nth-child(even) {
 
 <body>
     <div class="section is-mobile" style="background-color: rgb(247, 247, 247);">
+        <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+        <ul>
+            <!-- Home Page Icon -->
+            <li>
+                <a href="[[=URL('index')]]">
+          <span class="icon is-small">
+          <i class="fa fa-fw fa-home" aria-hidden="true"></i>
+          </span>
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <!-- Used Cars Page Icon -->
+            <li>
+                <a href="[[=URL('second_page')]]">
+          <span class="icon is-small">
+          <i class="fa fa-fw fa-car" aria-hidden="true"></i>
+          </span>
+                    <span>Used Cars</span>
+                </a>
+            </li>
+
+            <!-- My BookMark Page Icon -->
+            <li class="is-active">
+                <a aria-current="page">
+          <span class="icon is-small">
+          <i class="fa fa-fw fa-bookmark" aria-hidden="true"></i>
+          </span>
+                    <span>More Detail</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    </div>
+    <div class="section is-mobile" style="background-color: rgb(247, 247, 247);">
         
             <div class="slideshow-container is-mobile" style="border-image: 50 round;">
               <div class="picture">
@@ -256,7 +291,7 @@ tr:nth-child(even) {
                 <h2 style="margin-left: 30px; font-size: 30px; color: black;">
                     Contact The Seller
                     <p>
-                        <a href="mailto:[[=res.car_description]]">Send email</a>
+                        <a href="mailto:[[=res.car_description]]">Send Your Email</a>
                     </p>
                 </h2>
                 </div>
