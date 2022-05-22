@@ -80,6 +80,12 @@ let init = (app) => {
         axios.get(load_cars).then(function (response){
             app.vue.results = app.enumerate(response.data.results);
         })
+
+        axios.get(get_cars_url).then(function (r1){
+            app.vue.results = app.enumerate(r1.data.results);
+        })
+
+        alert(1);
     };
 
     // Call to the initializer.

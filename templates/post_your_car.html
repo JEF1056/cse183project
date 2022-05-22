@@ -65,7 +65,8 @@
               <div class="columns block is-mobile">
                 <div class="column is-three-fifth">
                     <figure class="image">
-                        <img v-if="row.car_picture" width="50" :src="row.car_picture" />
+                            <img width="50" src="[[=row.car_picture]]"
+                                 alt="Placeholder image"/>
                     </figure>
                 </div>
 
@@ -92,11 +93,11 @@
                           <span class="icon"><i class="fa fa-fw fa-bookmark"></i></span>
                           <span>BookMark</span>
                       </a>
-                  <a href="[[=URL('edit', row.id)]]" class="card-footer-item has-text-grey">
+                  <a href="[[=URL('edit', row.id, signer = url_signer)]]" class="card-footer-item has-text-grey">
                       <span class="icon"><i class="fa fa-fw fa-pencil-square-o"></i></span>
                       <span>Edit Information</span>
                   </a>
-                  <a href="[[=URL('delete', row.id)]]" class="card-footer-item has-text-grey">
+                  <a href="[[=URL('delete', row.id, signer = url_signer)]]" class="card-footer-item has-text-grey">
                       <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
                       <span>Delete Post</span>
                   </a>
@@ -111,6 +112,8 @@
         <span class="icon"><i class="fa fa-fw fa-backward"></i></span>
         <span>back</span>
       </a>
+
+
 
   </div>
 

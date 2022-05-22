@@ -61,9 +61,14 @@ def second_page():
         if r.car_brand not in res:
             res.append(r.car_brand)
 
-    return dict(res=res, rows=rows, url_signer=url_signer,
+    temp = db(db.cars).select().as_list()
+    for r1 in temp:
+        r1['car_url'] = URL('car_description_page', r1['id'])
+
+    return dict(res=res, results = temp, rows=rows, url_signer=url_signer,
                 filter_url=URL('filter', signer=url_signer),
                 load_cars=URL('load_cars', signer=url_signer),
+                get_cars_url=URL('get_cars', signer=url_signer),
                 )
 
 
@@ -123,7 +128,7 @@ def upload_pic():
 
 # This endpoint will be used for URLs of the form /edit/k where k is the product id.
 @action('edit/<cars_id:int>', method=["GET", "POST"])
-@action.uses('edit.html', db, session, auth.user, url_signer)
+@action.uses('edit.html', db, session, auth.user, url_signer.verify())
 def edit(cars_id=None):
     assert cars_id is not None
     # We read the product being edited from the db.
@@ -141,7 +146,7 @@ def edit(cars_id=None):
 
 
 @action('delete/<cars_id:int>')
-@action.uses(db, session, auth.user, url_signer)
+@action.uses(db, session, auth.user, url_signer.verify())
 def delete(cars_id=None):
     assert cars_id is not None
     db(db.cars.id == cars_id).delete()
@@ -206,9 +211,10 @@ def filter():
     dist = GeoDistance('us')
     for x in all_car:
         cal_distence = dist.query_postal_code(car_city,x.car_city)
+        id = x.id
         if car_range != "":
             if cal_distence*0.621371 <= int(car_range):
-                y = db(db.cars.car_city == x.car_city).select().as_list()
+                y = db(db.cars.id == id).select().as_list()
                 for a in y:
                     final.append(a)
     # get all lists
@@ -247,6 +253,8 @@ def filter():
     # print(counter)
     # in case only one input value
     if counter == 1:
+        for f in final:
+            f['car_url'] = URL('car_description_page', f['id'])
         return dict(results=final)
     # case two input value
     elif counter == 2:
@@ -259,6 +267,8 @@ def filter():
                     # final_count[x]+=1
                     final1.append(final[x])
         # print(final1)
+        for f1 in final1:
+            f1['car_url'] = URL('car_description_page', f1['id'])
         return dict(results=final1)
     # case more than two input value
     else:
@@ -274,6 +284,8 @@ def filter():
         for z in range(0, len(final_count)):
             if final_count[z] == counter - 1:
                 final2.append(final[z])
+        for f2 in final2:
+            f2['car_url'] = URL('car_description_page', f2['id'])
         return dict(results=final2)
 
 
@@ -311,14 +323,25 @@ def my_bookmarks():
         for r in s:
             if r['users'] == get_user_email():
                 final22.append(row)
-    return dict(final22=final22)
+    return dict(final22=final22, url_signer=url_signer)
 
 
-# TODO Just a blank page
-@action('car_description_page')
-@action.uses(url_signer, 'car_description_page.html', db, auth.user)
-def car_description_page():
-    return dict(url_signer=url_signer)
+@action('get_cars')
+@action.uses(url_signer, db, auth.user)
+def car_description_page(cars_id = None):
+    results = db(db.cars).select().as_list()
+    for r in results:
+        r['car_url'] = URL('car_description_page', r['id'])
+    #res = db.cars[cars_id]
+    return dict(results = results, url_signer=url_signer)
+
+@action('car_description_page/<cars_id:int>')
+@action.uses(url_signer, 'car_description_page.html', db, auth.user, session)
+def car_description_page(cars_id = None):
+    res = db(db.cars.id == cars_id).select().first()
+
+    #res = db.cars[cars_id]
+    return dict(res = res, url_signer=url_signer)
 
 
 # TODO Still in progress
@@ -326,7 +349,7 @@ def car_description_page():
 @action.uses(url_signer, 'post_your_car.html', db, auth.user)
 def post_your_car():
     res = []
-    rows = db(db.cars.created_by).select()
+    rows = db(db.cars.created_by == get_user_email()).select()
     for r in rows:
         if r.car_brand not in res:
             res.append(r.car_brand)
@@ -334,7 +357,8 @@ def post_your_car():
     first_name = get_first_name()
     last_name = get_last_name()
 
-    return dict(res=res, rows=rows, first_name=first_name, last_name=last_name, url_signer=url_signer, )
+    return dict(res=res, rows=rows, first_name=first_name, last_name=last_name,
+                url_signer=url_signer, load_cars=URL('load_cars', signer=url_signer),)
 
 
 # TODO not finished yet

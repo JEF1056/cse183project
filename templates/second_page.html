@@ -128,7 +128,7 @@
                             <footer class="card-footer">
                                 <p class="card-footer-item">
 
-                                    <a href="[[=URL('car_description_page',1)]]" class="card-footer-item has-text-grey">
+                                    <a class="card-footer-item has-text-grey" :href="y.car_url">
                                         <span class="icon"><i class="fa fa-fw fa-info"></i></span>
                                         <span>MoreDetail</span>
                                     </a>
@@ -166,6 +166,7 @@
                     <th>Picture</th>
                     <th>Created By</th>
                     <th>Creation Date</th>
+                    <th>zip</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -178,9 +179,11 @@
                     <td>[[=row.car_price]]</td>
                     <td>[[=row.car_mileage]]</td>
                     <td>[[=row.car_description]]</td>
-                    <td>[[=row.car_picture]]</td>
+<!--                    <td>[[=row.car_picture]]</td>-->
+                    <td>[[=row.car_city]]</td>
                     <td>[[=row.created_by]]</td>
                     <td>[[=row.creation_date]]</td>
+
                     <td>
                         <a class="button" href="[[=URL('edit', row.id)]]">
                             <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
@@ -194,7 +197,24 @@
                 </tr>
                 [[pass]]
             </table>
+
+
+
+
+
+
+
+
         </div>
+
+        <div v-for="i in resu" class="block">
+                <a class="button is-link" :href="i.car_url">
+
+                </a>
+        </div>
+
+
+
         <!-- End of Debug Part -->
 
         [[block page_scripts]]
@@ -202,6 +222,7 @@
         <script>
             let filter_url = "[[=XML(filter_url)]]";
             let load_cars = "[[=XML(load_cars)]]";
+            let get_cars_url = "[[=XML(get_cars_url)]]";
         </script>
 
         <script src="js/index.js"></script>
