@@ -311,6 +311,7 @@ def my_bookmarks():
         for r in s:
             if r['users'] == get_user_email():
                 final22.append(row)
+    print(final22)
     return dict(final22=final22)
 
 
