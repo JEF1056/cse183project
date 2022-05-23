@@ -85,7 +85,7 @@ let init = (app) => {
             app.vue.results = app.enumerate(r1.data.results);
         })
 
-        alert(1);
+        // alert(1);
     };
 
     // Call to the initializer.
