@@ -7,8 +7,8 @@
 </style>
 
 
-<div class="section" id="vue-target" v-cloak>
-
+<div class="section has-background-white-ter" id="vue-target" v-cloak >
+  <!-- Using Breadcrumbs to show which page is current page -->
    <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
         <ul>
             <!-- Home Page Icon -->
@@ -69,16 +69,23 @@
 
   <!-- Displays all posts -->
   <div class="container block">
-    <div v-for="post in rows.slice()" class="box has-background-light is-shadowless" >
-      
+    <div v-for="post in rows.slice()" class="card" >
 
+
+  <header class="card-header">
+    <p class="card-header-title">
+      By {{post.first_name}} {{post.last_name}}
+    </p>
+  </header>
+  <div class="card-content">
+    <div class="content">
       <div>{{post.post}}</div>
-      <div class="has-text-grey-light">{{post.first_name}} {{post.last_name}}</div>
-      <div class="columns block mt-0">
-        <div class="column has-text-left">
-          <nav class="level">
-            <div class="level-left">
-              <span @mouseenter="show_likes(post._idx)" class="level-item">
+    </div>
+  </div>
+  <footer class="card-footer">
+
+    <a class="card-footer-item">
+      <span @mouseenter="show_likes(post._idx)" class="level-item">
                 <span @click="set_like(post._idx)" @mouseleave="hide_likes(post._idx)">
                   <div class="icon has-text-info">
                     <i v-if="post.like" class="fa fa-thumbs-up fas fa-lg fa-flip-horizontal"></i>
@@ -86,8 +93,10 @@
                   </div>
                 </span>
               </span>
-    
-              <span @mouseenter="show_likes(post._idx)" class="level-item">
+    </a>
+
+    <a  class="card-footer-item">
+      <span @mouseenter="show_likes(post._idx)" class="level-item">
                 <span @click="set_dislike(post._idx)" @mouseleave="hide_likes(post._idx)">
                   <div class="icon has-text-info">
                     <i v-if="post.dislike" class="fa fa-thumbs-down fas fa-lg fa-flip-horizontal"></i>
@@ -95,20 +104,21 @@
                   </div>
                 </span>
               </span>
-              <span v-if="post.show_likers" class="is-size-7 has-text-info level-item">
+      <span v-if="post.show_likers" class="is-size-7 has-text-info level-item">
                 {{like_sentence}}
               </span>
-            </div>
-          
-          </nav>
+    </a>
 
-        </div>
-        <div v-if="'[[=user_email]]' === post.user_email" class="column has-text-right">
+    <a class="card-footer-item">
+      <div v-if="'[[=user_email]]' === post.user_email" >
           <span class="icon has-text-danger">
             <i @click="delete_post(post._idx)" class="fa fa-trash fas fa-lg"></i>
           </span>
-        </div>
       </div>
+    </a>
+  </footer>
+
+
     </div>
   </div>
 

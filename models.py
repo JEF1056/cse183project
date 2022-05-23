@@ -47,7 +47,7 @@ db.define_table(
     Field('users'),
 )
 
-# For chat page use
+# ----------------------- For feedback page use -----------------------
 db.define_table('posts',
                 Field('first_name', default=get_first_name),
                 Field('last_name', default=get_last_name),
@@ -61,7 +61,7 @@ db.define_table('likes',
                 Field('dislike', 'boolean'),
                 Field('user', 'reference auth_user', default=get_user)
 )
-# End use for chat page
+# ----------------------- For feedback page use -----------------------
 
 db.cars.id.readable = db.cars.id.writable = False
 db.cars.created_by.readable = db.cars.created_by.writable = False
