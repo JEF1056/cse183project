@@ -68,6 +68,7 @@ let setup = (carApp) => {
     let input = event.target;
     let file = input.files[0];
     let car = carApp.vue.cars[car_idx];
+    console.log("car", car);
     if (file) {
         let reader = new FileReader();
         reader.addEventListener("load", function () {
@@ -125,6 +126,7 @@ let setup = (carApp) => {
 
   carApp.delete_car = function(id){
     // let id = carApp.vue.cars[id].id;
+    console.log("in delete");
     axios.get(delete_car_url, {params: {id: id}}).then(function (response){
       for (let i = 0; i < carApp.vue.cars.length; i++) {
         if (carApp.vue.cars[i].id === id) {

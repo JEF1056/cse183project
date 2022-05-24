@@ -8,7 +8,7 @@
       <div class="field">
         <label class="label">Brand</label>
           <div class="control">
-            <input id="brand" type="text" v-model="add_car_brand" class="input" placeholder="[[=c.car_brand]]" placeholder="[[=c.car_brand]]">
+            <input id="brand" type="text" v-model="add_car_brand" class="input" placeholder="[[=c.car_brand]]">
           </div>    
       </div>
         <!-- <p>[[=c.car_brand]]</p> -->
@@ -43,17 +43,12 @@
         </div>
       </div>
       <div class="field">
-        <label class="label">City</label>
+        <label class="label">Zip</label>
         <div class="control">
-          <input type="text" v-model="add_car_city" class="input" placeholder="[[=c.car_city]]">
+          <input type="text" v-model="add_car_city" class="input" placeholder="[[=c.car_city]]" >
         </div>
       </div>
-      <div class="field">
-        <label class="label">Zip Code</label>
-        <div class="control">
-          <input type="text" v-model="add_car_zip" class="input" placeholder="[[=c.car_zip]]">
-        </div>
-      </div>
+      
       <div class="field">
         <div class="control">
           <a class="button is-success" @click="edit_car([[=c.id]])" href="[[=URL('display')]]">

@@ -1,6 +1,11 @@
 [[extend 'auth_layout.html']]
 <!--Citation:https://stackoverflow.com/questions/31483655/how-to-select-specific-json-element-in-python -->
-<div class="section">
+
+<head>
+    <title>My_Bookmark_Page</title>
+</head>
+
+<div class="section has-background-white-ter">
     <!-- Using Breadcrumbs to do the navigation on top left part of the page-->
     <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
         <ul>
@@ -50,7 +55,8 @@
                     <div class="columns block is-mobile">
                         <div class="column is-three-fifth">
                             <figure class="image">
-                                <img src="https://i.ytimg.com/vi/bUVB0eB9d6Q/maxresdefault.jpg" alt="Placeholder image">
+                                <img width="50" src="[[=final['car_picture']]]"
+                                 alt="Placeholder image"/>
                             </figure>
                         </div>
 
@@ -69,7 +75,7 @@
             <!-- TODO Edit BookMark-->
             <footer class="card-footer">
                  <p class="card-footer-item">
-                  <a href="[[=URL('car_description_page')]]" class="card-footer-item has-text-grey">
+                  <a href="[[=URL('car_description_page', final['id'])]]" class="card-footer-item has-text-grey">
                       <span class="icon"><i class="fa fa-fw fa-info"></i></span>
                       <span>MoreDetail</span>
                   </a>

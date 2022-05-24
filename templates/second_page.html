@@ -1,7 +1,7 @@
 [[extend 'auth_layout.html']]
 
 <head>
-
+    <title>Used_Car_Page</title>
 </head>
 
 <div class="section has-background-white-ter">
@@ -57,6 +57,19 @@
                     <b>Type A Car Model</b>
                     <input class="input" type="text" v-model="car_model" @keyup="filter"/>
                     <br/>
+                    <b>Location</b>
+                    <select v-model="range" name="range" @change="filter">
+                        <option disabled value="">Within</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>150</option>
+                        <option>200</option>
+                        <option>250</option>
+                        <option>500</option>
+                    </select>
+                    <b> miles of </b>
+                    <input class="input" type="number" v-model="city" @keyup="filter"/>
+                    <br/>
 
                     <b>Year</b>
                     <input class="input" type="number" v-model="min_year" @keyup="filter"/>
@@ -86,7 +99,7 @@
                         <div class="card">
                             <div class="card-content">
                                 <b class="is-size-4 is-italic has-text-info"> {{y.car_year}} {{y.car_brand}}
-                                    {{y.car_model}} </b>
+                                    {{y.car_model}}</b>
                             </div>
 
                             <div class="card-image">
@@ -114,7 +127,8 @@
                             <!-- TODO edit BookMark -->
                             <footer class="card-footer">
                                 <p class="card-footer-item">
-                                    <a href="[[=URL('car_description_page')]]" class="card-footer-item has-text-grey">
+
+                                    <a class="card-footer-item has-text-grey" :href="y.car_url">
                                         <span class="icon"><i class="fa fa-fw fa-info"></i></span>
                                         <span>MoreDetail</span>
                                     </a>
@@ -153,6 +167,7 @@
                     <th>Picture</th>
                     <th>Created By</th>
                     <th>Creation Date</th>
+                    <th>zip</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -165,9 +180,11 @@
                     <td>[[=row.car_price]]</td>
                     <td>[[=row.car_mileage]]</td>
                     <td>[[=row.car_description]]</td>
-                    <!-- <td>[[=row.car_picture]]</td> -->
+<!--                    <td>[[=row.car_picture]]</td>-->
+                    <td>[[=row.car_city]]</td>
                     <td>[[=row.created_by]]</td>
                     <td>[[=row.creation_date]]</td>
+
                     <td>
                         <a class="button" href="[[=URL('edit', row.id)]]">
                             <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
@@ -181,7 +198,24 @@
                 </tr>
                 [[pass]]
             </table>
+
+
+
+
+
+
+
+
         </div>
+
+        <div v-for="i in resu" class="block">
+                <a class="button is-link" :href="i.car_url">
+
+                </a>
+        </div>
+
+
+
         <!-- End of Debug Part -->
     </div>
         [[block page_scripts]]
@@ -191,6 +225,7 @@
             let load_cars = "[[=XML(load_cars)]]";
             let delete_car_url = "[[=XML(delete_car_url)]]";
             let load_cars_info = "[[=XML(load_cars_info)]]";
+            let get_cars_url = "[[=XML(get_cars_url)]]";
         </script>
 
         <script src="js/index.js"></script>
@@ -198,4 +233,6 @@
         [[end]]
 
     
+    </div>
+
 </div>

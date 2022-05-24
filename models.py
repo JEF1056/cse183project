@@ -35,9 +35,8 @@ db.define_table(
     Field('car_price', 'text'),
     Field('car_mileage', 'integer', default=0, requires=IS_INT_IN_RANGE(0, 1000000)),
     Field('car_description', 'text', requires=IS_LENGTH(maxsize=2048)),
-    Field('car_picture', requires=IS_LENGTH(maxsize=99999)),
+    Field('car_picture',requires=IS_LENGTH(maxsize=99999)),
     Field('car_city'),
-    Field('car_zip'),
     Field('created_by', default=get_user_email),
     Field('creation_date', 'datetime', default=get_time),
 )
@@ -48,7 +47,7 @@ db.define_table(
     Field('users'),
 )
 
-# For chat page use
+# ----------------------- For feedback page use -----------------------
 db.define_table('posts',
                 Field('first_name', default=get_first_name),
                 Field('last_name', default=get_last_name),
@@ -62,7 +61,7 @@ db.define_table('likes',
                 Field('dislike', 'boolean'),
                 Field('user', 'reference auth_user', default=get_user)
 )
-# End use for chat page
+# ----------------------- For feedback page use -----------------------
 
 db.cars.id.readable = db.cars.id.writable = False
 db.cars.created_by.readable = db.cars.created_by.writable = False

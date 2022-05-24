@@ -3,14 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Post_Your_Car_Page</title>
 </head>
 
 <body>
-
-  <div class="container" id="vue-target-cars">
-      <div class = "title">Cars posted by [[=first_name]] [[=last_name]]</div>
-      <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+    <div class="section" id="vue-target-cars">
+        <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
           <ul>
               <!-- Home Page Icon -->
               <li>
@@ -42,6 +40,12 @@
               </li>
           </ul>
       </nav>
+    </div>
+
+
+  <div class="container" id="vue-target-cars">
+
+      <div class = "title">Cars posted by [[=first_name]] [[=last_name]]</div>
 
       <div class = "block">
           <a class="button is-success" href="[[=URL('add')]]">
@@ -65,7 +69,8 @@
               <div class="columns block is-mobile">
                 <div class="column is-three-fifth">
                     <figure class="image">
-                        <img src="https://i.ytimg.com/vi/bUVB0eB9d6Q/maxresdefault.jpg" alt="Placeholder image">
+                            <img width="50" src="[[=row.car_picture]]"
+                                 alt="Placeholder image"/>
                     </figure>
                 </div>
 
@@ -92,11 +97,11 @@
                           <span class="icon"><i class="fa fa-fw fa-bookmark"></i></span>
                           <span>BookMark</span>
                       </a>
-                  <a href="[[=URL('edit', row.id)]]" class="card-footer-item has-text-grey">
+                  <a href="[[=URL('edit', row.id, signer = url_signer)]]" class="card-footer-item has-text-grey">
                       <span class="icon"><i class="fa fa-fw fa-pencil-square-o"></i></span>
                       <span>Edit Information</span>
                   </a>
-                  <a @click="delete_car([[=row.id]])" class="card-footer-item has-text-grey">
+                  <a class="button card-footer-item has-text-grey" @click="delete_car([[=row.id]])" >
                       <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
                       <span>Delete Post</span>
                   </a>
@@ -109,7 +114,7 @@
 
       <a class="button is-warning" href="[[=URL('second_page')]]">
         <span class="icon"><i class="fa fa-fw fa-backward"></i></span>
-        <span>back</span>
+        <span>Back</span>
       </a>
   
       [[block page_scripts]]
