@@ -281,10 +281,19 @@ def filter():
 @action.uses('add_bookmark.html', db, session, auth.user, url_signer)
 def add_bookmark(cars_id=None):
     assert cars_id is not None
-    db.marked_by.insert(
-        cars_id=cars_id,
-        users=get_user_email()
-    )
+    p = list(db(db.marked_by.cars_id == cars_id and db.marked_by.users == get_user_email()).select())
+    if not p:
+        db.marked_by.insert(
+            cars_id=cars_id,
+            users=get_user_email()
+        )
+    redirect(URL('my_bookmarks'))
+
+@action('remove_bookmark/<cars_id:int>', method=["GET", "POST"])
+@action.uses('add_bookmark.html', db, session, auth.user, url_signer)
+def add_bookmark(cars_id=None):
+    assert cars_id is not None
+    db(db.marked_by.cars_id == cars_id and db.marked_by.users == get_user_email()).delete()
     redirect(URL('my_bookmarks'))
 
 
