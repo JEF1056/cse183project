@@ -281,24 +281,11 @@ def filter():
 @action.uses('add_bookmark.html', db, session, auth.user, url_signer)
 def add_bookmark(cars_id=None):
     assert cars_id is not None
-    form = Form([Field('user_email', requires=IS_NOT_EMPTY())], csrf_session=session, formstyle=(FormStyleBulma))
-    rows = db(db.cars.created_by).select().as_list()
-    a = False
-    for row in rows:
-        s = db((db.marked_by.cars_id == row['id']) & (db.marked_by.cars_id == cars_id)).select()
-        for r in s:
-            if r['users'] == get_user_email():
-                a = True
-    if form.accepted:
-        if a:
-            redirect(URL('add_bookmark', cars_id))
-        else:
-            db.marked_by.insert(
-                cars_id=cars_id,
-                users=form.vars['user_email']
-            )
-    # ok=users.users
-    return dict(form=form)
+    db.marked_by.insert(
+        cars_id=cars_id,
+        users=get_user_email()
+    )
+    redirect(URL('my_bookmarks'))
 
 
 @action('my_bookmarks/', method=["GET", "POST"])
