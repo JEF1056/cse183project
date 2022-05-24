@@ -8,7 +8,7 @@
 
 <body>
 
-  <div class="container">
+  <div class="container" id="vue-target-cars">
       <div class = "title">Cars posted by [[=first_name]] [[=last_name]]</div>
       <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
           <ul>
@@ -96,7 +96,7 @@
                       <span class="icon"><i class="fa fa-fw fa-pencil-square-o"></i></span>
                       <span>Edit Information</span>
                   </a>
-                  <a href="[[=URL('delete', row.id)]]" class="card-footer-item has-text-grey">
+                  <a @click="delete_car([[=row.id]])" class="card-footer-item has-text-grey">
                       <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
                       <span>Delete Post</span>
                   </a>
@@ -111,7 +111,16 @@
         <span class="icon"><i class="fa fa-fw fa-backward"></i></span>
         <span>back</span>
       </a>
+  
+      [[block page_scripts]]
+      <!-- Loads the index-specific js for Vue -->
+      <script>
+          let delete_car_url = "[[=XML(delete_car_url)]]";
+          let load_cars_info = "[[=XML(load_cars_info)]]";
+      </script>
 
+      <script src="js/cars.js"></script>
+      [[end]]
   </div>
 
 </body>

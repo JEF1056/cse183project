@@ -1,6 +1,7 @@
 [[extend 'layout.html']]
 
 <div class="section" id="vue-target-cars">
+
   <div v-if="display > 1">
     <div class="title">Insert a Car</div>
     <div class="form">
@@ -115,7 +116,7 @@
         </td>
         <td>{{c.car_city}}</td>
         <td>{{c.car_zip}}</td>
-         <td>{{c.car_picture}}</td> 
+         <!-- <td>{{c.car_picture}}</td> -->
       </tr>
     </table>
   </div>
@@ -131,7 +132,8 @@
 <!-- Loads the index-specific js for Vue -->
 <script>
   let add_car_url = "[[=XML(add_car_url)]]";
-  let upload_pic_url = "[[=XML(upload_pic_url)]]"
+  let upload_pic_url = "[[=XML(upload_pic_url)]]";
+  let load_cars_info = "[[=XML(load_cars_info)]]";
 </script>
 <script src="js/cars.js"></script>
 

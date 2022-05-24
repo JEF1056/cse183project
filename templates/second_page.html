@@ -132,7 +132,8 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="section" id="vue-target-cars">
         <!-- For Debug use all the users can see all the result from the DB -->
         <p>BELOW IS USING FOR TEST RIGHT NOW</p>
         <a class="button is-success" href="[[=URL('add')]]">
@@ -164,7 +165,7 @@
                     <td>[[=row.car_price]]</td>
                     <td>[[=row.car_mileage]]</td>
                     <td>[[=row.car_description]]</td>
-                    <td>[[=row.car_picture]]</td>
+                    <!-- <td>[[=row.car_picture]]</td> -->
                     <td>[[=row.created_by]]</td>
                     <td>[[=row.creation_date]]</td>
                     <td>
@@ -173,7 +174,7 @@
                         </a>
                     </td>
                     <td>
-                        <a class="button" href="[[=URL('delete', row.id)]]">
+                        <a class="button" @click="delete_car([[=row.id]])" >
                             <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
                         </a>
                     </td>
@@ -182,16 +183,19 @@
             </table>
         </div>
         <!-- End of Debug Part -->
-
+    </div>
         [[block page_scripts]]
         <!-- Loads the index-specific js for Vue -->
         <script>
             let filter_url = "[[=XML(filter_url)]]";
             let load_cars = "[[=XML(load_cars)]]";
+            let delete_car_url = "[[=XML(delete_car_url)]]";
+            let load_cars_info = "[[=XML(load_cars_info)]]";
         </script>
 
         <script src="js/index.js"></script>
+        <script src="js/cars.js"></script>
         [[end]]
 
-    </div>
+    
 </div>
