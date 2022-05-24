@@ -300,6 +300,12 @@ def add_bookmark(cars_id=None):
 @action('my_bookmarks/', method=["GET", "POST"])
 @action.uses('my_bookmarks.html', db, session, auth.user, url_signer)
 def my_bookmarks():
+    return {"load_bookmarks": URL("load_bookmarks")}
+
+
+@action('load_bookmarks')
+@action.uses(db, session)
+def load_bookmarks():
     final22 = []
     rows = db(db.cars.created_by).select().as_list()
     for row in rows:
@@ -308,8 +314,7 @@ def my_bookmarks():
             if r['users'] == get_user_email():
                 final22.append(row)
     print(final22)
-    return dict(final22=final22)
-
+    return dict(results=final22)
 
 # TODO Just a blank page
 @action('car_description_page')
