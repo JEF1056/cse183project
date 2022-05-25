@@ -72,21 +72,23 @@
                     <br/>
 
                     <b>Year</b>
-                    <input class="input" type="number" v-model="min_year" @keyup="filter"/>
-                    <div> to</div>
-                    <input class="input" type="number" v-model="max_year" @keyup="filter"/>
+                    <br/>
+                    <input class="input" type="number" v-model="min_year" @keyup="filter"
+                           style="width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_year"
+                                                                       @keyup="filter" style="width: 94px"/>
                     <br/>
 
                     <b>Price</b>
-                    <input class="input" type="number" v-model="min_price" @keyup="filter"/>
-                    <div>to</div>
-                    <input class="input" type="number" v-model="max_price" @keyup="filter"/>
+                    <br/>
+                    <input class="input" type="number" v-model="min_price" @keyup="filter" style="width: 94px;"/><span>to</span><input
+                        class="input" type="number" v-model="max_price" @keyup="filter" style="width: 94px;"/>
                     <br/>
 
                     <b>Mileage</b>
-                    <input class="input" type="number" v-model="min_mil" @keyup="filter"/>
-                    <div>to</div>
-                    <input class="input" type="number" v-model="max_mil" @keyup="filter"/>
+                    <br/>
+                    <input class="input" type="number" v-model="min_mil" @keyup="filter"
+                           style="width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_mil"
+                                                                       @keyup="filter" style="width: 94px;"/>
                 </div>
                 <!-- End of filter functions -->
 
@@ -107,8 +109,8 @@
                                     <div class="columns block is-mobile">
                                         <div class="column is-three-fifth">
                                             <figure class="image">
-                                              <img v-if="y.car_picture" width="50" :src="y.car_picture" 
-                                              alt="Placeholder image"/>
+                                                <img v-if="y.car_picture" width="50" :src="y.car_picture"
+                                                     alt="Placeholder image"/>
                                             </figure>
                                         </div>
 
@@ -146,8 +148,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="section" id="vue-target-cars">
+
         <!-- For Debug use all the users can see all the result from the DB -->
         <p>BELOW IS USING FOR TEST RIGHT NOW</p>
         <a class="button is-success" href="[[=URL('add')]]">
@@ -180,7 +181,7 @@
                     <td>[[=row.car_price]]</td>
                     <td>[[=row.car_mileage]]</td>
                     <td>[[=row.car_description]]</td>
-<!--                    <td>[[=row.car_picture]]</td>-->
+                    <!--                    <td>[[=row.car_picture]]</td>-->
                     <td>[[=row.car_city]]</td>
                     <td>[[=row.created_by]]</td>
                     <td>[[=row.creation_date]]</td>
@@ -191,7 +192,7 @@
                         </a>
                     </td>
                     <td>
-                        <a class="button" @click="delete_car([[=row.id]])" >
+                        <a class="button" href="[[=URL('delete', row.id)]]">
                             <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
                         </a>
                     </td>
@@ -200,39 +201,28 @@
             </table>
 
 
-
-
-
-
-
-
         </div>
 
         <div v-for="i in resu" class="block">
-                <a class="button is-link" :href="i.car_url">
+            <a class="button is-link" :href="i.car_url">
 
-                </a>
+            </a>
         </div>
 
 
-
         <!-- End of Debug Part -->
-    </div>
+
         [[block page_scripts]]
         <!-- Loads the index-specific js for Vue -->
         <script>
             let filter_url = "[[=XML(filter_url)]]";
             let load_cars = "[[=XML(load_cars)]]";
-            let delete_car_url = "[[=XML(delete_car_url)]]";
-            let load_cars_info = "[[=XML(load_cars_info)]]";
             let get_cars_url = "[[=XML(get_cars_url)]]";
         </script>
 
         <script src="js/index.js"></script>
-        <script src="js/cars.js"></script>
         [[end]]
 
-    
     </div>
 
 </div>

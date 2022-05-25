@@ -32,7 +32,7 @@ db.define_table(
     Field('car_brand', requires=IS_NOT_EMPTY()),
     Field('car_model', requires=IS_NOT_EMPTY()),
     Field('car_year', 'integer', default=0, requires=IS_INT_IN_RANGE(1886, todays_date.year + 1)),
-    Field('car_price', 'text'),
+    Field('car_price', 'float', default=0.00, requires=IS_FLOAT_IN_RANGE(0, 1e6)),
     Field('car_mileage', 'integer', default=0, requires=IS_INT_IN_RANGE(0, 1000000)),
     Field('car_description', 'text', requires=IS_LENGTH(maxsize=2048)),
     Field('car_picture',requires=IS_LENGTH(maxsize=99999)),

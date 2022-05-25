@@ -68,8 +68,6 @@ def second_page():
     return dict(res=res, results = temp, rows=rows, url_signer=url_signer,
                 filter_url=URL('filter', signer=url_signer),
                 load_cars=URL('load_cars', signer=url_signer),
-                delete_car_url= URL('delete_car', signer=url_signer),
-                load_cars_info=URL('load_cars_info', signer=url_signer),  
                 get_cars_url=URL('get_cars', signer=url_signer),
                 )
 
@@ -77,30 +75,19 @@ def second_page():
 @action('add')
 @action.uses('add.html', auth.user, session)
 def add():
-  return dict(
-    add_car_url=URL('add_car', signer=url_signer),
-    load_cars_info=URL('load_cars_info', signer=url_signer),  
-    upload_pic_url=URL('upload_pic', signer=url_signer)
-  )
+    return dict(
+        add_car_url=URL('add_car', signer=url_signer),
+        # load_cars_info=URL('load_cars_info', signer=url_signer),
+        upload_pic_url=URL('upload_pic', signer=url_signer)
+    )
 
-@action('display')
-@action.uses('display.html', url_signer, db)
-def display():
-  car = db(db.cars.created_by).select().as_list()[-1]
-  id = car['id']  
-  
-  return dict(
-    id=id,
-    car=car,
-    load_cars_info=URL('load_cars_info', signer=url_signer),  
-    upload_pic_url=URL('upload_pic', signer=url_signer)
-  )
 
 @action('add_car', method="POST")
 @action.uses(db, auth.user, session, url_signer.verify())
 def add_car():
-
-  id = db.cars.insert(
+    # redirect(URL('upload_image.html'))
+    print("here")
+    id = db.cars.insert(
         car_brand=request.json.get('car_brand'),
         car_model=request.json.get('car_model'),
         car_year=request.json.get('car_year'),
@@ -110,27 +97,31 @@ def add_car():
         car_picture=request.json.get('car_picture'),
         car_city=request.json.get('car_city'),
         car_zip=request.json.get('car_zip'),
-      )
-
-  return dict(
-    id=id,
+    )
+    # redirect(URL('upload_image'))
+    ID = id
+    return dict(
+        id=id,
+    )
     # load_cars_info=URL('load_cars_info', signer=url_signer),
-  )
-  
-# @action('upload_image')
-# @action.uses('upload_image.html', auth.user, session)
-# def upload_image():
-#   return dict(
-#     # load_cars_info=URL('load_cars_info', signer=url_signer),
-#     upload_pic_url=URL('upload_pic', signer=url_signer),
-#   )
+    # upload_pic_url=URL('upload_pic', signer=url_signer))
+
+
+@action('upload_image')
+@action.uses('upload_image.html', auth.user, session)
+def upload_image():
+    return dict(
+        load_cars_info=URL('load_cars_info', signer=url_signer),
+        upload_pic_url=URL('upload_pic', signer=url_signer),
+    )
+
 
 @action('upload_pic', method="POST")
 @action.uses(url_signer.verify(), db, 'second_page.html')
 def upload_pic():
     cars_id = request.json.get("cars_id")
     car_picture = request.json.get("car_picture")
-    print("image upload")
+
     db(db.cars.id == cars_id).update(car_picture=car_picture)
     return "gg"
 
@@ -140,51 +131,25 @@ def upload_pic():
 @action.uses('edit.html', db, session, auth.user, url_signer.verify())
 def edit(cars_id=None):
     assert cars_id is not None
-    # We read the car being edited from the db.
-    car = db(db.cars.id == cars_id).select()
-
-    if car is None:
+    # We read the product being edited from the db.
+    # p = db(db.product.id == product_id).select().first()
+    p = db.cars[cars_id]
+    if p is None:
         # Nothing found to be edited!
-        redirect(URL('second_page'))
+        redirect(URL('`second_page`'))
+    # Edit form: it has record=
+    form = Form(db.cars, record=p, deletable=False, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        # The update already happened!
+        redirect(URL('post_your_car'))
+    return dict(form=form)
 
-    return dict(car=car,
-      cars_id=cars_id,
-      edit_car_url = URL('edit_car', signer=url_signer),
-      load_cars_info=URL('load_cars_info', signer=url_signer),
-    )
 
-@action('edit_car', method="POST")
+@action('delete/<cars_id:int>')
 @action.uses(db, session, auth.user, url_signer.verify())
-def edit_car():
-  id = request.json.get('id')
-  car_brand=request.json.get('car_brand')
-  car_model=request.json.get('car_model')
-  car_year=request.json.get('car_year')
-  car_price=request.json.get('car_price')
-  car_mileage=request.json.get('car_mileage')
-  car_description=request.json.get('car_description')
-  # car_picture=request.json.get('car_picture')
-  car_city=request.json.get('car_city')
-  car_zip=request.json.get('car_zip')
-
-  db(db.cars.id == id).update(
-    car_brand=car_brand,
-    car_model=car_model,
-    car_year=car_year,
-    car_price=car_price,
-    car_mileage=car_mileage,
-    car_description=car_description,
-    car_city=car_city,
-    car_zip=car_zip,
-  )
-  return "ok"
-
-@action('delete_car')
-@action.uses(db, session, auth.user, url_signer)
-def delete_car():
-    id = request.params.get('id')
-    assert id is not None
-    db(db.cars.id == id).delete()
+def delete(cars_id=None):
+    assert cars_id is not None
+    db(db.cars.id == cars_id).delete()
     redirect(URL('post_your_car'))
 
 
@@ -198,10 +163,12 @@ def load_cars():
 @action('load_cars_info')
 @action.uses(db)
 def load_cars_info():
-  cars = db(db.cars).select().as_list()
-  return dict(
-    cars=cars
-  )
+    cars = db(db.cars.id == ID).select()
+    print("cars ", cars)
+    return dict(
+        cars=cars
+    )
+
 
 @action('filter')
 @action.uses()
@@ -390,10 +357,9 @@ def post_your_car():
     first_name = get_first_name()
     last_name = get_last_name()
 
-    return dict(res=res, rows=rows, first_name=first_name, last_name=last_name, url_signer=url_signer,
-      delete_car_url= URL('delete_car', signer=url_signer),
-      load_cars_info=URL('load_cars_info', signer=url_signer),
-      load_cars=URL('load_cars', signer=url_signer))
+    return dict(res=res, rows=rows, first_name=first_name, last_name=last_name,
+                url_signer=url_signer, load_cars=URL('load_cars', signer=url_signer),)
+
 
 # TODO not finished yet
 # ---------------------------------  For feedback page use: ---------------------------------
