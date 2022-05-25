@@ -119,6 +119,36 @@ let setup = (carApp) => {
         });
   };
 
+  carApp.edit_car = function(id) {
+    // console.log("id is", id);
+    // console.log(carApp.vue.cars);
+    let car;
+    for(let i =0; i < carApp.vue.cars.length; i++) {
+      if(carApp.vue.cars[i].id === id){
+        car = carApp.vue.cars[i];
+        break;
+      }
+    }
+    // let car = carApp.vue.cars[id];
+    console.log("car", car);
+    axios.post(edit_car_url, {
+      id: car.id,  
+      car_brand: carApp.vue.add_car_brand,
+      car_model: carApp.vue.add_car_model,
+      car_year: carApp.vue.add_car_year,
+      car_price: carApp.vue.add_car_price,
+      car_mileage: carApp.vue.add_car_mileage,
+      car_description: carApp.vue.add_car_description,
+      car_city: carApp.vue.add_car_city,
+      car_zip: carApp.vue.add_car_zip,
+    }).then(function (response) {
+      // console.log("in response");
+      console.log(response);
+    }).catch(function(error){
+      console.log(error);
+    });
+  };  
+
   carApp.reset_form = function () {
     carApp.vue.add_car_brand = "";
     carApp.vue.add_car_model = "";
@@ -133,7 +163,8 @@ let setup = (carApp) => {
   carApp.methods = {
     add_car: carApp.add_car,
     upload_file: carApp.upload_file, // Uploads a selected file
-    toggle: carApp.toggle
+    toggle: carApp.toggle,
+    edit_car: carApp.edit_car,
   };
 
     // This creates the Vue instance.
@@ -150,11 +181,6 @@ let setup = (carApp) => {
       carApp.vue.cars = carApp.enumerate(response.data.cars);  
       // console.log(response.data.cars);
     });
-
-    // axios.get(file_info_url)
-    //   .then(function (r) {
-    //     carApp.set_result(r);
-    //   });
   };
 
   carApp.setup();

@@ -1,9 +1,81 @@
-[[extend 'layout.html']]
+[[extend 'auth_layout.html']]
 
-<div class="section">
 
-  <h1 class="title">Edit a Car</h1>
-
-  [[=form]]
-
+<div class="section" id="vue-target-cars">
+    <div class="title">Edit Car </div>
+    [[for c in car:]]
+    <div class="form">
+      <div class="field">
+        <label class="label">Brand</label>
+          <div class="control">
+            <input id="brand" type="text" v-model="add_car_brand" class="input" placeholder="[[=c.car_brand]]">
+          </div>    
+      </div>
+        <!-- <p>[[=c.car_brand]]</p> -->
+      <div class="field">
+        <label class="label">Model</label>
+        <div class="control">
+          <input type="text" v-model="add_car_model" class="input" placeholder="[[=c.car_model]]">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Year</label>
+        <div class="control">
+          <input type="text" v-model="add_car_year" class="input" placeholder="[[=c.car_year]]" >
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Price</label>
+        <div class="control">
+          <input type="text" v-model="add_car_price" class="input" placeholder="[[=c.car_price]]">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Mileage</label>
+        <div class="control">
+          <input type="text" v-model="add_car_mileage" class="input" placeholder="[[=c.car_mileage]]">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Description</label>
+        <div class="control">
+          <input type="text" v-model="add_car_description" class="input" placeholder="[[=c.car_description]]">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Zip</label>
+        <div class="control">
+          <input type="text" v-model="add_car_city" class="input" placeholder="[[=c.car_city]]" >
+        </div>
+      </div>
+      
+      <div class="field">
+        <div class="control">
+          <a class="button is-success" @click="edit_car([[=c.id]])" href="[[=URL('display')]]">
+            <span class="icon"><i class="fa fa-plus"></i></span>
+            <span>Edit</span>
+          </a>
+          <!-- <input  placeholder="Add" class="button is-primary" href="[[=URL('upload_image')]]"> -->
+        </div>
+      </div>
+      <!-- <a class="button is-success" href="[[=URL('upload_image')]]">
+        <span class="icon"><i class="fa fa-plus"></i></span>
+        <span>Add</span>
+      </a> -->
+    </div>
+    [[pass]]
 </div>
+
+[[block page_scripts]]
+  <!-- Loads the index-specific js for Vue -->
+  <script>
+    // var t = "test";
+    // document.getElementById("brand").placeholder = t;
+    let edit_car_url = "[[=XML(edit_car_url)]]";
+    let load_cars_info = "[[=XML(load_cars_info)]]";
+  
+  </script>
+
+  <script src="js/cars.js"></script>  
+  
+[[end]]

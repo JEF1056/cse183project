@@ -71,6 +71,19 @@ def second_page():
                 get_cars_url=URL('get_cars', signer=url_signer),
                 )
 
+@action('display')
+@action.uses('display.html', url_signer, db)
+def display():
+  car = db(db.cars.created_by).select().as_list()[-1]
+  id = car['id']  
+  # print("id in dis", car, id)
+
+  return dict(
+    id=id,
+    car=car,
+    load_cars_info=URL('load_cars_info', signer=url_signer),  
+    upload_pic_url=URL('upload_pic', signer=url_signer)
+  )
 
 @action('add')
 @action.uses('add.html', auth.user, session)
@@ -131,19 +144,43 @@ def upload_pic():
 @action.uses('edit.html', db, session, auth.user, url_signer.verify())
 def edit(cars_id=None):
     assert cars_id is not None
-    # We read the product being edited from the db.
-    # p = db(db.product.id == product_id).select().first()
-    p = db.cars[cars_id]
-    if p is None:
+
+    car = db(db.cars.id == cars_id).select()
+    if car is None:
         # Nothing found to be edited!
         redirect(URL('`second_page`'))
-    # Edit form: it has record=
-    form = Form(db.cars, record=p, deletable=False, csrf_session=session, formstyle=FormStyleBulma)
-    if form.accepted:
-        # The update already happened!
-        redirect(URL('post_your_car'))
-    return dict(form=form)
 
+    return dict(car=car,
+      edit_car_url = URL('edit_car', signer=url_signer),
+      load_cars_info=URL('load_cars_info', signer=url_signer),
+      )
+
+@action('edit_car', method="POST")
+@action.uses(db, session, auth.user, url_signer.verify())
+def edit_car():
+  print("in edit_car")
+  id = request.json.get('id')
+  car_brand=request.json.get('car_brand')
+  car_model=request.json.get('car_model')
+  car_year=request.json.get('car_year')
+  car_price=request.json.get('car_price')
+  car_mileage=request.json.get('car_mileage')
+  car_description=request.json.get('car_description')
+  # car_picture=request.json.get('car_picture')
+  car_city=request.json.get('car_city')
+  car_zip=request.json.get('car_zip')
+
+  db(db.cars.id == id).update(
+    car_brand=car_brand,
+    car_model=car_model,
+    car_year=car_year,
+    car_price=car_price,
+    car_mileage=car_mileage,
+    car_description=car_description,
+    car_city=car_city,
+    car_zip=car_zip,
+  )
+  return "ok"
 
 @action('delete/<cars_id:int>')
 @action.uses(db, session, auth.user, url_signer.verify())
@@ -151,6 +188,9 @@ def delete(cars_id=None):
     assert cars_id is not None
     db(db.cars.id == cars_id).delete()
     redirect(URL('post_your_car'))
+
+
+
 
 
 @action('load_cars')
@@ -163,8 +203,8 @@ def load_cars():
 @action('load_cars_info')
 @action.uses(db)
 def load_cars_info():
-    cars = db(db.cars.id == ID).select()
-    print("cars ", cars)
+    cars = db(db.cars).select().as_list()
+    # print("cars ", cars)
     return dict(
         cars=cars
     )
@@ -349,7 +389,8 @@ def car_description_page(cars_id = None):
 @action.uses(url_signer, 'post_your_car.html', db, auth.user)
 def post_your_car():
     res = []
-    rows = db(db.cars.created_by == get_user_email()).select()
+    rows = db(db.cars.created_by).select()
+    # rows = db(db.cars.created_by == get_user_email()).select()
     for r in rows:
         if r.car_brand not in res:
             res.append(r.car_brand)
@@ -361,6 +402,13 @@ def post_your_car():
                 url_signer=url_signer, load_cars=URL('load_cars', signer=url_signer),)
 
 
+@action('delete_car')
+@action.uses(db, session, auth.user, url_signer)
+def delete_car():
+    id = request.params.get('id')
+    assert id is not None
+    db(db.cars.id == id).delete()
+    redirect(URL('post_your_car'))
 # TODO not finished yet
 # ---------------------------------  For feedback page use: ---------------------------------
 @action('feedback')
