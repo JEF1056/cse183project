@@ -50,15 +50,13 @@
     <div class="block">
         <a class="button is-success" href="[[=URL('add')]]">
             <span class="icon"><i class="fa fa-plus"></i></span>
-            <span>Add</span>
+            <span>Post Your Car</span>
         </a>
     </div>
 
     [[for row in rows:]]
 
     <!-- Card buttons to detail description page -->
-    <!--          <a href="[[=URL('car_description_page')]]">-->
-
     <div class="card">
         <div class="card-content">
             <b class="is-size-4 is-italic"> [[=row.car_year]] [[=row.car_brand]] [[=row.car_model]] </b>
