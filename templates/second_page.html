@@ -129,14 +129,17 @@
                             <!-- TODO edit BookMark -->
                             <footer class="card-footer">
                                 <p class="card-footer-item">
-
                                     <a class="card-footer-item has-text-grey" :href="y.car_url">
-                                        <span class="icon"><i class="fa fa-fw fa-info"></i></span>
-                                        <span>MoreDetail</span>
+                                        <button class="button is-text">
+                                            <span class="icon"><i class="fa fa-fw fa-info"></i></span>
+                                            <span>MoreDetail</span>
+                                        </button>
                                     </a>
                                     <a href="[[=URL('my_bookmarks')]]" class="card-footer-item has-text-grey">
-                                        <span class="icon"><i class="fa fa-fw fa-bookmark"></i></span>
-                                        <span>BookMark</span>
+                                        <button class="button is-text">
+                                            <span class="icon"><i class="fa fa-fw fa-bookmark"></i></span>
+                                            <span>BookMark</span>
+                                        </button>
                                     </a>
                                 </p>
                             </footer>
@@ -169,7 +172,7 @@
                     <th>zip</th>
                     <th>Created By</th>
                     <th>Creation Date</th>
-                    
+
                     <th></th>
                     <th></th>
                 </tr>
@@ -182,7 +185,7 @@
                     <td>[[=row.car_price]]</td>
                     <td>[[=row.car_mileage]]</td>
                     <td>[[=row.car_description]]</td>
-                    <td><img width="50" src="[[=row.car_picture]]" /></td>
+                    <td><img width="50" src="[[=row.car_picture]]"/></td>
                     <td>[[=row.car_city]]</td>
                     <td>[[=row.created_by]]</td>
                     <td>[[=row.creation_date]]</td>
