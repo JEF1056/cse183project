@@ -149,10 +149,24 @@ def delete(cars_id=None):
 
 
 @action('load_cars')
-@action.uses(db)
+@action.uses(db, session)
 def load_cars():
-    rows = db(db.cars).select()
-    return dict(results=rows)
+    rows = [{i:dict(row)[i] for i in dict(row) if i not in ["update_record", "delete_record", "marked_by"]} for row in db(db.cars).select()]
+    marked_by = {}
+    for row in db(db.marked_by).select():
+        if row["cars_id"] in marked_by:
+            marked_by[row["cars_id"]].append(row["users"])
+        else:
+            marked_by[row["cars_id"]] = [row["users"]]
+    
+    for i, row in enumerate(rows):
+        marked_list=[]
+        if row["id"] in marked_by:
+            marked_list = marked_by[row["id"]]
+        rows[i].update(dict(marked_by=marked_list))
+        
+    print(dict(results=rows))
+    return dict(results=rows, current_user=get_user_email())
 
 
 @action('load_cars_info')

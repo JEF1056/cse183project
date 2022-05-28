@@ -132,7 +132,10 @@
                                         <span>MoreDetail</span>
                                     </a>
                                     <a :href="'[[=URL("add_bookmark")]]' + '/' + y.id" class="card-footer-item has-text-grey">
-                                        <span class="icon"><i class="fa fa-fw fa-bookmark"></i></span>
+                                        <span class="icon">
+                                            <i v-if="current_user == y.marked_by" class="fa fa-fw fa-bookmark"></i>
+                                            <i v-else class="fa fa-bookmark has-text-info"></i>
+                                        </span>
                                         <span>BookMark</span>
                                     </a>
                                 </p>

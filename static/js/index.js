@@ -20,6 +20,7 @@ let init = (app) => {
         max_price: "",
         min_mil: "",
         max_mil: "",
+        current_user: "",
     };
 
     app.enumerate = (a) => {
@@ -53,6 +54,8 @@ let init = (app) => {
             })
                 .then(function (result) {
                     app.vue.results = result.data.results;
+                    app.vue.current_user=result.data.current_user;
+                    consoile.log(app.vue.results);
                 });
         } else {
             app.vue.results = [];
