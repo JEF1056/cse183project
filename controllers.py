@@ -165,7 +165,6 @@ def load_cars():
             marked_list = marked_by[row["id"]]
         rows[i].update(dict(marked_by=marked_list))
         
-    print(dict(results=rows))
     return dict(results=rows, current_user=get_user_email())
 
 
@@ -295,7 +294,7 @@ def filter():
 @action.uses('add_bookmark.html', db, session, auth.user, url_signer)
 def add_bookmark(cars_id=None):
     assert cars_id is not None
-    p = list(db(db.marked_by.cars_id == cars_id and db.marked_by.users == get_user_email()).select())
+    p = list(car for car in db(db.marked_by.users == get_user_email()).select() if car["cars_id"] == cars_id)
     if not p:
         db.marked_by.insert(
             cars_id=cars_id,
@@ -307,7 +306,10 @@ def add_bookmark(cars_id=None):
 @action.uses('add_bookmark.html', db, session, auth.user, url_signer)
 def add_bookmark(cars_id=None):
     assert cars_id is not None
-    db(db.marked_by.cars_id == cars_id and db.marked_by.users == get_user_email()).delete()
+    p = list(car["id"] for car in db(db.marked_by.users == get_user_email()).select() if car["cars_id"] == cars_id)
+    print(p)
+    for i in range(len(p)):
+        db(db.marked_by.id == p[i]).delete()
     redirect(URL('my_bookmarks'))
 
 
@@ -315,7 +317,6 @@ def add_bookmark(cars_id=None):
 @action.uses('my_bookmarks.html', db, session, auth.user, url_signer)
 def my_bookmarks():
     return {"load_bookmarks": URL("load_bookmarks")}
-
 
 @action('load_bookmarks')
 @action.uses(db, session)
@@ -327,7 +328,6 @@ def load_bookmarks():
         for r in s:
             if r['users'] == get_user_email():
                 final22.append(row)
-    print(final22)
     return dict(results=final22)
 
 # TODO Just a blank page
