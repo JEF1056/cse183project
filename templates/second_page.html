@@ -130,14 +130,13 @@
                                     <a class="card-footer-item has-text-grey" :href="y.car_url">
                                         <button class="button is-text">
                                             <span class="icon"><i class="fa fa-fw fa-info"></i></span>
-                                            <span>MoreDetail {{y.car_url}}</span>
+                                            <span>MoreDetail</span>
                                         </button>
                                     </a>
                                     <a :href="'[[=URL("add_bookmark")]]' + '/' + y.id" class="card-footer-item has-text-grey">
                                         <span class="icon">
                                             <i v-if="!y.marked_by.includes(current_user)" class="fa fa-fw fa-bookmark"></i>
                                             <i v-else class="fa fa-bookmark has-text-info"></i>
-                                            {{y.marked_by}}
                                         </span>
                                         <span>BookMark</span>
                                     </a>
@@ -154,55 +153,8 @@
         </div>
 
 
-        <!-- For Debug use all the users can see all the result from the DB -->
-        <p>BELOW IS USING FOR TEST RIGHT NOW</p>
-        <a class="button is-success" href="[[=URL('add')]]">
-            <span class="icon"><i class="fa fa-plus"></i></span>
-            <span>Add</span>
-        </a>
-        <div class="container">
-            <table class="table is-striped is-fullwidth">
-                <tr>
-                    <th>Id</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Year</th>
-                    <th>Price</th>
-                    <th>Mileage</th>
-                    <th>Description</th>
-                    <th>Picture</th>
-                    <th>Created By</th>
-                    <th>Creation Date</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                [[for row in rows:]]
-                <tr>
-                    <td>[[=row.id]]</td>
-                    <td>[[=row.car_brand]]</td>
-                    <td>[[=row.car_model]]</td>
-                    <td>[[=row.car_year]]</td>
-                    <td>[[=row.car_price]]</td>
-                    <td>[[=row.car_mileage]]</td>
-                    <td>[[=row.car_description]]</td>
-                    <td>[[=row.car_picture]]</td>
-                    <td>[[=row.created_by]]</td>
-                    <td>[[=row.creation_date]]</td>
-                    <td>
-                        <a class="button" href="[[=URL('edit', row.id)]]">
-                            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="button" href="[[=URL('delete', row.id)]]">
-                            <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-                        </a>
-                    </td>
-                </tr>
-                [[pass]]
-            </table>
-        </div>
-        <!-- End of Debug Part -->
+
+        
 
         [[block page_scripts]]
         <!-- Loads the index-specific js for Vue -->

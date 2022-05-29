@@ -76,9 +76,11 @@
                 <!-- TODO Edit BookMark-->
                 <footer class="card-footer">
                     <p class="card-footer-item">
-                    <a href="[[=URL('car_description_page')]]" class="card-footer-item has-text-grey">
-                        <span class="icon"><i class="fa fa-fw fa-info"></i></span>
-                        <span>MoreDetail</span>
+                    <a :href="'[[=URL("car_description_page")]]' + '/' + y.id" class="card-footer-item has-text-grey">
+                        <button class="button is-text">
+                            <span class="icon"><i class="fa fa-fw fa-info"></i></span>
+                            <span>MoreDetail</span>
+                        </button>
                     </a>
                     <a :href="'[[=URL("remove_bookmark")]]' + '/' + y.id" class="card-footer-item has-text-grey">
                         <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
@@ -96,9 +98,11 @@
     <!-- Loads the index-specific js for Vue -->
     <script>
         let load_cars = "[[=XML(load_bookmarks)]]";
+        let get_cars_url = "[[=XML(get_cars_url)]]";
     </script>
 
     <script src="js/bookmarks.js"></script>
+    <script src="js/index.js"></script>
     [[end]]
 </div>
 

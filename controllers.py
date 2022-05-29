@@ -308,6 +308,19 @@ def filter():
     if counter == 1:
         for f in final:
             f['car_url'] = URL('car_description_page', f['id'])
+
+        marked_by = {}
+        for row in db(db.marked_by).select():
+            if row["cars_id"] in marked_by:
+                marked_by[row["cars_id"]].append(row["users"])
+            else:
+                marked_by[row["cars_id"]] = [row["users"]]
+
+        for i, row in enumerate(final):
+            marked_list = []
+            if row["id"] in marked_by:
+                marked_list = marked_by[row["id"]]
+            final[i].update(dict(marked_by=marked_list))
         return dict(results=final)
     # case two input value
     elif counter == 2:
@@ -322,6 +335,19 @@ def filter():
         # print(final1)
         for f1 in final1:
             f1['car_url'] = URL('car_description_page', f1['id'])
+
+        marked_by = {}
+        for row in db(db.marked_by).select():
+            if row["cars_id"] in marked_by:
+                marked_by[row["cars_id"]].append(row["users"])
+            else:
+                marked_by[row["cars_id"]] = [row["users"]]
+
+        for i, row in enumerate(final1):
+            marked_list = []
+            if row["id"] in marked_by:
+                marked_list = marked_by[row["id"]]
+            final1[i].update(dict(marked_by=marked_list))
         return dict(results=final1)
     # case more than two input value
     else:
@@ -339,6 +365,19 @@ def filter():
                 final2.append(final[z])
         for f2 in final2:
             f2['car_url'] = URL('car_description_page', f2['id'])
+
+        marked_by = {}
+        for row in db(db.marked_by).select():
+            if row["cars_id"] in marked_by:
+                marked_by[row["cars_id"]].append(row["users"])
+            else:
+                marked_by[row["cars_id"]] = [row["users"]]
+
+        for i, row in enumerate(final2):
+            marked_list = []
+            if row["id"] in marked_by:
+                marked_list = marked_by[row["id"]]
+            final2[i].update(dict(marked_by=marked_list))
         return dict(results=final2)
 
 
@@ -365,10 +404,13 @@ def add_bookmark(cars_id=None):
     redirect(URL('my_bookmarks'))
 
 
+
+
 @action('my_bookmarks/', method=["GET", "POST"])
 @action.uses('my_bookmarks.html', db, session, auth.user, url_signer)
 def my_bookmarks():
-    return {"load_bookmarks": URL("load_bookmarks")}
+    return {"load_bookmarks": URL("load_bookmarks"), "get_cars_url": URL("get_cars")}
+    #return dict(load_bookmarks = URL('load_bookmarks'), get_cars_url=URL('get_cars', signer=url_signer),)
 
 @action('load_bookmarks')
 @action.uses(db, session)
