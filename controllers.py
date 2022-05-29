@@ -389,6 +389,19 @@ def car_description_page(cars_id = None):
     results = db(db.cars).select().as_list()
     for r in results:
         r['car_url'] = URL('car_description_page', r['id'])
+
+    marked_by = {}
+    for row in db(db.marked_by).select():
+        if row["cars_id"] in marked_by:
+            marked_by[row["cars_id"]].append(row["users"])
+        else:
+            marked_by[row["cars_id"]] = [row["users"]]
+
+    for i, row in enumerate(results):
+        marked_list = []
+        if row["id"] in marked_by:
+            marked_list = marked_by[row["id"]]
+        results[i].update(dict(marked_by=marked_list))
     #res = db.cars[cars_id]
     return dict(results = results, url_signer=url_signer)
 
