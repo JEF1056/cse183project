@@ -308,6 +308,19 @@ def filter():
     if counter == 1:
         for f in final:
             f['car_url'] = URL('car_description_page', f['id'])
+
+        marked_by = {}
+        for row in db(db.marked_by).select():
+            if row["cars_id"] in marked_by:
+                marked_by[row["cars_id"]].append(row["users"])
+            else:
+                marked_by[row["cars_id"]] = [row["users"]]
+
+        for i, row in enumerate(final):
+            marked_list = []
+            if row["id"] in marked_by:
+                marked_list = marked_by[row["id"]]
+            final[i].update(dict(marked_by=marked_list))
         return dict(results=final)
     # case two input value
     elif counter == 2:
