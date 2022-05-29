@@ -72,21 +72,18 @@
                     <br/>
 
                     <b>Year</b>
-                    <input class="input" type="number" v-model="min_year" @keyup="filter"/>
-                    <div> to</div>
-                    <input class="input" type="number" v-model="max_year" @keyup="filter"/>
+                    <br/>
+                    <input class="input" type="number" v-model="min_year" @keyup="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_year" @keyup="filter" style = "width: 94px"/>
                     <br/>
 
                     <b>Price</b>
-                    <input class="input" type="number" v-model="min_price" @keyup="filter"/>
-                    <div>to</div>
-                    <input class="input" type="number" v-model="max_price" @keyup="filter"/>
+                    <br/>
+                    <input class="input" type="number" v-model="min_price" @keyup="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_price" @keyup="filter" style = "width: 94px;"/>
                     <br/>
 
                     <b>Mileage</b>
-                    <input class="input" type="number" v-model="min_mil" @keyup="filter"/>
-                    <div>to</div>
-                    <input class="input" type="number" v-model="max_mil" @keyup="filter"/>
+                    <br/>
+                    <input class="input" type="number" v-model="min_mil" @keyup="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_mil" @keyup="filter" style = "width: 94px;"/>
                 </div>
                 <!-- End of filter functions -->
 
@@ -110,6 +107,7 @@
                                               <img v-if="y.car_picture" width="50" :src="y.car_picture" 
                                               alt="Placeholder image"/>
                                             </figure>
+
                                         </div>
 
                                         <div class="column is-two-fifth">
@@ -134,11 +132,13 @@
                                         </button>
                                     </a>
                                     <a :href="'[[=URL("add_bookmark")]]' + '/' + y.id" class="card-footer-item has-text-grey">
-                                        <span class="icon">
-                                            <i v-if="!y.marked_by.includes(current_user)" class="fa fa-fw fa-bookmark"></i>
-                                            <i v-else class="fa fa-bookmark has-text-info"></i>
-                                        </span>
-                                        <span>BookMark</span>
+                                        <button class="button is-text">
+                                            <span class="icon">
+                                                <i v-if="!y.marked_by.includes(current_user)" class="fa fa-fw fa-bookmark"></i>
+                                                <i v-else class="fa fa-bookmark has-text-info"></i>
+                                            </span>
+                                            <span>BookMark</span>
+                                        </button>
                                     </a>
                                 </p>
 

@@ -458,8 +458,8 @@ def car_description_page(cars_id = None):
 @action.uses(url_signer, 'post_your_car.html', db, auth.user)
 def post_your_car():
     res = []
-    rows = db(db.cars.created_by).select()
-    # rows = db(db.cars.created_by == get_user_email()).select()
+    #rows = db(db.cars.created_by).select()
+    rows = db(db.cars.created_by == get_user_email()).select()
     for r in rows:
         if r.car_brand not in res:
             res.append(r.car_brand)
