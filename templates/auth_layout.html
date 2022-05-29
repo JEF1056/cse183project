@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <base href="[[=URL('static')]]/">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -39,12 +40,19 @@
             <div class="buttons">
               <a class="navbar-item" href="[[=URL('my_bookmarks')]]">
                 <span class="icon"><i class="fa fa-fw fa-bookmark"></i></span>
-                <span>Mybookmark</span>
+                <span>MyBookmark</span>
               </a>
+
               <a class="navbar-item" href="[[=URL('post_your_car')]]">
                 <span class="icon"><i class="fa fa-fw fa-heart"></i></span>
-                <span>Mypost</span>
+                <span>MyPost</span>
               </a>
+
+              <a class="navbar-item" href="[[=URL('feedback')]]">
+                <span class="icon"><i class="fa fa-fw fa-comment"></i></span>
+                <span>Feedback</span>
+              </a>
+
               [[if globals().get('user'):]]
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link is-primary">
@@ -68,16 +76,44 @@
       </div>
     </nav>
 
+
     <!-- beginning of HTML inserted by extending template -->
     [[include]]
     <!-- end of HTML inserted by extending template -->
+
+    <!-- beginning of auth_layout footer for every page -->
     <footer class="footer has-background-info">
       <div class="content has-text-centered">
         Made with <a href="https://py4web.com">py4web</a>.
         <a href="https://learn-py4web.github.io">Learn py4web!</a>
       </div>
+
+      <hr style="background-color:black">
+
+      <div class="columns block is-mobile">
+        <div class="column is-half">
+         <figure class="image">
+           <img src="">
+          </figure>
+          <b>CarExpress</b>
+          <p>© 2022 CAREXPRESS, Inc.</p>
+          <p> Copyright 2022 CarExpress Team</p>
+        </div>
+
+        <div class="column is-half">
+          <p>
+            CarExpress Vehicle History products and services are based only on information supplied to CarExpress.
+            CarExpress does not have the complete history of every vehicle. Use the CarExpress search as one important
+            tool, along with a vehicle inspection and test drive, to make a better decision about your next
+            used car.
+          </p>
+        </div>
+      </div>
+      <!-- End of auth_layout footer for every page -->
     </footer>
+
   </body>
+
   <script src="js/sugar.min.js"></script>
   <script src="js/axios.min.js"></script>
   <script src="js/vue.js"></script>

@@ -1,0 +1,93 @@
+[[extend 'auth_layout.html']]
+<div class="section" >
+  
+  <!-- <a class="button is-success" href="[[=URL('add')]]">
+    <span class="icon"><i class="fa fa-plus"></i></span>
+    <span>Add</span>
+  </a> -->
+
+  <div class="container" id="vue-target-cars">
+    <div v-if="display > 1">
+      <table class="table is-striped is-fullwidth">
+        <tr>
+          <th>Id</th>
+          <th>Brand</th>
+          <th>Model</th>
+          <th>Year</th>
+          <th>Price</th>
+          <th>Mileage</th>
+          <th>Description</th>
+          <th>Picture</th>
+          <th>City</th>
+          <th>Zip Code</th>
+          <th>Created By</th>
+          <th>Creation Date</th> 
+          <th></th>
+          <th></th>
+        </tr> 
+        <tr v-for="c in cars" :key="c.id">
+          <td>{{c.id}}</td>
+          <td>{{c.car_brand}}</td>
+          <td>{{c.car_model}}</td>
+          <td>{{c.car_year}}</td>
+          <td>{{c.car_price}}</td>
+          <td>{{c.car_mileage}}</td>
+          <td>{{c.car_description}}</td>
+          <td>
+            <!-- <div v-if="!c.car_picture"> -->
+              <p class="control">
+                <div class="file is-info">
+                  <label class="file-label">
+                    <input class="file-input" type="file"
+                          accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                          @change="upload_file($event, c._idx)" href="[[=URL('post_your_car')]]">
+                    <span class="file-cta">
+                      <span class="file-label">
+                        <span><i class="fa fa-upload"></i></span>
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </p>
+            <!-- </div>
+            <img v-if="c.car_picture" width="50" :src="c.car_picture" /> -->
+          </td>
+          <td>{{c.car_city}}</td>
+          <td>{{c.car_zip}}</td>
+          </tr>
+      </table>
+      <article class="message is-warning">
+        <div class="message-header">
+            <p>Note</p>
+        </div>
+        <div class="message-body">
+            Please upload a picture no larger than <strong>5 MB</strong>. Thank you!
+        </div>
+    </article>
+  </div>
+    <div class="section" v-else-if="display > 0">
+      <article class="message is-warning">
+        <div class="message-header">
+            <p>Notification</p>
+        </div>
+        <div class="message-body">
+            You have successfully added your vehicles! : )
+        </div>
+    </article>
+    <a class="button is-success" href="[[=URL('second_page')]]">
+        <span class="icon"><i class="fa fa-backward"></i></span>
+        <span>Back</span>
+    </a>
+    </div>
+  </div>
+
+  [[block page_scripts]]
+  <!-- Loads the index-specific js for Vue -->
+  <script>
+    let upload_pic_url = "[[=XML(upload_pic_url)]]";
+    let load_cars_info = "[[=XML(load_cars_info)]]";
+  </script>
+  <script src="js/cars.js"></script>
+  [[end]]
+  
+</div> 

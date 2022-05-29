@@ -10,6 +10,8 @@ let init = (app) => {
         // Complete as you see fit.
         query: "",
         results: [],
+        range: "",
+        city: "",
         min_year: "",
         max_year: "",
         selected: "",
@@ -18,6 +20,7 @@ let init = (app) => {
         max_price: "",
         min_mil: "",
         max_mil: "",
+        current_user: "",
     };
 
     app.enumerate = (a) => {
@@ -33,11 +36,13 @@ let init = (app) => {
     app.filter = function () {
         if (app.vue.selected.length > 1 || app.vue.min_year.length > 1 || app.vue.max_year.length > 1 ||
             app.vue.car_model.length > 1 || app.vue.min_price.length > 1 || app.vue.max_price.length > 1 ||
-            app.vue.min_mil.length > 1 || app.vue.max_mil.length > 1
+            app.vue.min_mil.length > 1 || app.vue.max_mil.length > 1 || app.vue.range.length>1 && app.vue.city.length>1
         ) {
             axios.get(filter_url, {
                 params: {
                     s: app.vue.selected,
+                    city: app.vue.city,
+                    range: app.vue.range,
                     min_year: app.vue.min_year,
                     max_year: app.vue.max_year,
                     car_model: app.vue.car_model,
@@ -49,6 +54,7 @@ let init = (app) => {
             })
                 .then(function (result) {
                     app.vue.results = result.data.results;
+                    app.vue.current_user=result.data.current_user;
                 });
         } else {
             app.vue.results = [];
@@ -75,7 +81,14 @@ let init = (app) => {
         // Typically this is a server GET call to load the data.
         axios.get(load_cars).then(function (response){
             app.vue.results = app.enumerate(response.data.results);
+            app.vue.current_user=response.data.current_user;
         })
+
+        axios.get(get_cars_url).then(function (r1){
+            app.vue.results = app.enumerate(r1.data.results);
+        })
+
+        // alert(1);
     };
 
     // Call to the initializer.
