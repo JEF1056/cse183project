@@ -335,6 +335,19 @@ def filter():
         # print(final1)
         for f1 in final1:
             f1['car_url'] = URL('car_description_page', f1['id'])
+
+        marked_by = {}
+        for row in db(db.marked_by).select():
+            if row["cars_id"] in marked_by:
+                marked_by[row["cars_id"]].append(row["users"])
+            else:
+                marked_by[row["cars_id"]] = [row["users"]]
+
+        for i, row in enumerate(final1):
+            marked_list = []
+            if row["id"] in marked_by:
+                marked_list = marked_by[row["id"]]
+            final1[i].update(dict(marked_by=marked_list))
         return dict(results=final1)
     # case more than two input value
     else:
@@ -352,6 +365,19 @@ def filter():
                 final2.append(final[z])
         for f2 in final2:
             f2['car_url'] = URL('car_description_page', f2['id'])
+
+        marked_by = {}
+        for row in db(db.marked_by).select():
+            if row["cars_id"] in marked_by:
+                marked_by[row["cars_id"]].append(row["users"])
+            else:
+                marked_by[row["cars_id"]] = [row["users"]]
+
+        for i, row in enumerate(final2):
+            marked_list = []
+            if row["id"] in marked_by:
+                marked_list = marked_by[row["id"]]
+            final2[i].update(dict(marked_by=marked_list))
         return dict(results=final2)
 
 
