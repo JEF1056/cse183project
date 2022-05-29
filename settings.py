@@ -17,8 +17,8 @@ APP_NAME = os.path.split(APP_FOLDER)[-1]
 # DB_FOLDER:    Sets the place where migration files will be created
 #               and is the store location for SQLite databases
 DB_FOLDER = required_folder(APP_FOLDER, "databases")
-DB_URI = "sqlite://storage.db"
-    #"mysql://root:"+password+"@sv.jfan.ml:34563/test?set_encoding =utf8mb4"
+#DB_URI = "sqlite://storage.db"
+DB_URI = "mysql://root:"+password+"@sv.jfan.ml:34563/test?set_encoding =utf8mb4"
     #"sqlite://storage.db"
 DB_POOL_SIZE = 1
 DB_MIGRATE = True
