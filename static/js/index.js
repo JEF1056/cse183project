@@ -55,7 +55,7 @@ let init = (app) => {
                 .then(function (result) {
                     app.vue.results = result.data.results;
                     app.vue.current_user=result.data.current_user;
-                    consoile.log(app.vue.results);
+                    console.log(app.vue.results);
                 });
         } else {
             app.vue.results = [];
@@ -82,6 +82,8 @@ let init = (app) => {
         // Typically this is a server GET call to load the data.
         axios.get(load_cars).then(function (response){
             app.vue.results = app.enumerate(response.data.results);
+            app.vue.current_user=response.data.current_user;
+            console.log(app.vue.results);
         })
     };
 
