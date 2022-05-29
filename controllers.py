@@ -404,13 +404,10 @@ def add_bookmark(cars_id=None):
     redirect(URL('my_bookmarks'))
 
 
-
-
 @action('my_bookmarks/', method=["GET", "POST"])
 @action.uses('my_bookmarks.html', db, session, auth.user, url_signer)
 def my_bookmarks():
-    return {"load_bookmarks": URL("load_bookmarks"), "get_cars_url": URL("get_cars")}
-    #return dict(load_bookmarks = URL('load_bookmarks'), get_cars_url=URL('get_cars', signer=url_signer),)
+    return {"load_bookmarks": URL("load_bookmarks")}
 
 @action('load_bookmarks')
 @action.uses(db, session)
