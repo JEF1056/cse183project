@@ -18,10 +18,13 @@ APP_NAME = os.path.split(APP_FOLDER)[-1]
 #               and is the store location for SQLite databases
 DB_FOLDER = required_folder(APP_FOLDER, "databases")
 #DB_URI = "sqlite://storage.db"
-DB_URI = "mysql://root:"+password+"@sv.jfan.ml:34563/test?set_encoding =utf8mb4"
+if "PYDAL_URI" in os.environ:
+    DB_URI = os.environ["PYDAL_URI"]
+else:
+    DB_URI = "mysql://root:"+password+"@sv.jfan.ml:34563/test?set_encoding =utf8mb4"
     #"sqlite://storage.db"
 DB_POOL_SIZE = 1
-DB_MIGRATE = False
+DB_MIGRATE = True
 DB_FAKE_MIGRATE = False  # maybe?
 
 # location where static files are stored:
