@@ -55,7 +55,7 @@
                     <br/>
 
                     <b>Type A Car Model</b>
-                    <input class="input" type="text" v-model="car_model" @change="filter"/>
+                    <input class="input" type="text" v-model="car_model" @keyup="filter"/>
                     <br/>
                     <b>Location</b>
                     <select v-model="range" name="range" @change="filter">
@@ -68,29 +68,22 @@
                         <option>500</option>
                     </select>
                     <b> miles of </b>
-                    <input class="input" type="number" v-model="city" @change="filter"/>
+                    <input class="input" type="number" v-model="city" @keyup="filter"/>
                     <br/>
 
                     <b>Year</b>
                     <br/>
-                    <input class="input" type="number" v-model="min_year" @change="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_year" @change="filter" style = "width: 94px"/>
+                    <input class="input" type="number" v-model="min_year" @keyup="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_year" @keyup="filter" style = "width: 94px"/>
                     <br/>
 
                     <b>Price</b>
                     <br/>
-                    <input class="input" type="number" v-model="min_price" @change="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_price" @change="filter" style = "width: 94px;"/>
+                    <input class="input" type="number" v-model="min_price" @keyup="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_price" @keyup="filter" style = "width: 94px;"/>
                     <br/>
 
                     <b>Mileage</b>
                     <br/>
-                    <input class="input" type="number" v-model="min_mil" @change="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_mil" @change="filter" style = "width: 94px;"/>
-
-                    </br>
-                    <div class = "block pt-4">
-                        <div class = "button is-light">
-                            Apply
-                        </div>
-                    </div>
+                    <input class="input" type="number" v-model="min_mil" @keyup="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_mil" @keyup="filter" style = "width: 94px;"/>
                 </div>
                 <!-- End of filter functions -->
 
