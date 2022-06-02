@@ -24,6 +24,12 @@ The path follows the bottlepy syntax.
 session, db, T, auth, and tempates are examples of Fixtures.
 Warning: Fixtures MUST be declared with @action.uses({fixtures}) else your app will result in undefined behavior
 """
+import os
+import datetime
+import json
+import traceback
+import uuid
+
 from yatl.helpers import A
 from pydal.validators import *
 
@@ -35,10 +41,20 @@ from .common import db, session, T, cache, auth, logger, authenticated, unauthen
 from .models import get_user_email, get_user, get_last_name, get_first_name
 from pgeocode import GeoDistance
 
+from nqgcs import NQGCS
+from .gcs_url import gcs_url
+from .settings import APP_FOLDER
+
 url_signer = URLSigner(session)
 
 ID = None
+BUCKET = '/car_pictures'
 
+GCS_KEY_PATH = os.path.join(APP_FOLDER, 'private/gcs_keys.json')
+with open(GCS_KEY_PATH) as gcs_key_f:
+    GCS_KEYS = json.load(gcs_key_f)
+
+gcs = NQGCS(json_key_path=GCS_KEY_PATH)
 
 @action('index')  # /fixtures_example/index
 @action.uses(url_signer, 'index.html', db, auth)
@@ -82,7 +98,11 @@ def display():
     id=id,
     car=car,
     load_cars_info=URL('load_cars_info', signer=url_signer),  
-    upload_pic_url=URL('upload_pic', signer=url_signer)
+    upload_pic_url=URL('upload_pic', signer=url_signer),
+    file_info_url = URL('file_info', signer=url_signer),
+    obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
+    notify_url = URL('notify_upload', signer=url_signer),
+    delete_url = URL('notify_delete', signer=url_signer),
   )
 
 @action('add')
@@ -91,15 +111,150 @@ def add():
     return dict(
         add_car_url=URL('add_car', signer=url_signer),
         # load_cars_info=URL('load_cars_info', signer=url_signer),
+        file_info_url = URL('file_info', signer=url_signer),
+        obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
+        notify_url = URL('notify_upload', signer=url_signer),
+        delete_url = URL('notify_delete', signer=url_signer),
         upload_pic_url=URL('upload_pic', signer=url_signer)
     )
 
+@action('file_info')
+@action.uses(url_signer.verify(), db)
+def file_info():
+    """Returns to the web app the information about the file currently
+    uploaded, if any, so that the user can download it or replace it with
+    another file if desired."""
+    
+    row = db(db.images.owner == get_user_email()).select().first()
+    # The file is present if the row is not None, and if the upload was
+    # confirmed.  Otherwise, the file has not been confirmed as uploaded,
+    # and should be deleted.
+    if row is not None and not row.confirmed:
+        # We need to try to delete the old file content.
+        delete_path(row.file_path)
+        row.delete_record()
+        row = {}
+    if row is None:
+        # There is no file.
+        row = {}
+    file_path = row.get('file_path')
+    return dict(
+        file_name=row.get('file_name'),
+        file_type=row.get('file_type'),
+        file_date=row.get('file_date'),
+        file_size=row.get('file_size'),
+        file_path=file_path,
+        download_url=None if file_path is None else gcs_url(GCS_KEYS, file_path),
+        # These two could be controlled to get other things done.
+        upload_enabled=True,
+        download_enabled=True,
+    )
+
+@action('obtain_gcs', method="POST")
+@action.uses(url_signer.verify(), db)
+def obtain_gcs():
+    
+    verb = request.json.get("action")
+    if verb == "PUT":
+        mimetype = request.json.get("mimetype", "")
+        file_name = request.json.get("file_name")
+        extension = os.path.splitext(file_name)[1]
+        car_id = request.json.get("car_id")
+
+        file_path = BUCKET + "/" + str(uuid.uuid1()) + extension
+
+        mark_possible_upload(file_path, car_id)
+        upload_url = gcs_url(GCS_KEYS, file_path, verb="PUT", 
+                                        content_type=mimetype)
+
+        return dict(
+            signed_url=upload_url,
+            file_path=file_path
+        )
+    elif verb in ["GET", "DELETE"]:
+        file_path = request.json.get("file_path")
+        if file_path is not None:
+            r = db(db.images.file_path == file_path).select().first()
+            if r is not None and r.owner == get_user_email():
+                delete_url = gcs_url(GCS_KEYS, file_path, verb="DELETE")
+                return dict(signed_url=delete_url)
+        return dict(signer_url=None)
+
+@action('notify_upload', method="POST")
+@action.uses(url_signer.verify(), db)
+def notify_upload():
+    file_type = request.json.get("file_type")
+    file_name = request.json.get("file_name")
+    file_path = request.json.get("file_path")
+    file_size = request.json.get("file_size")
+    car_id = request.json.get("car_id")
+    
+    print("File was uploaded:", file_path, file_name, file_type)
+
+    rows = db(db.cars.created_by == get_user_email()).select()
+    for r in rows:
+        if r.file_path != file_path:
+            delete_path(r.file_path)
+
+    d = datetime.datetime.utcnow()
+    db.cars.update_or_insert(
+        ((db.cars.id == car_id) &
+         (db.cars.file_path == file_path)),
+        created_by=get_user_email(),
+        file_path=file_path,
+        file_name=file_name,
+        file_type=file_type,
+        file_date=d,
+        file_size=file_size,
+        confirmed=True,
+    )
+    # Returns the file information.
+    return dict(
+        download_url=gcs_url(GCS_KEYS, file_path, verb='GET'),
+        file_date=d,
+    )
+
+@action('notify_delete', method="POST")
+@action.uses(url_signer.verify(), db)
+def notify_delete():
+    file_path = request.json.get("file_path")
+
+    db((db.images.owner == get_user_email()) & 
+        (db.images.file_path == file_path)).delete()
+    
+    return dict()
+
+def delete_path(file_path):
+
+    try: 
+        bucket, id = os.path.split(file_path)
+        gcs.delete(bucket[1:], id)
+    except:
+        pass
+
+def delete_previous_uploads():
+    """Deletes all previous uploads for a user, to be ready to upload a new file."""
+    previous = db(db.images.owner == get_user_email()).select()
+    # console.log("previous", previous)
+    for p in previous:
+        # There should be only one, but let's delete them all.
+        delete_path(p.file_path)
+    db(db.images.owner == get_user_email()).delete()
+
+def mark_possible_upload(file_path, car_id):
+    """Marks that a file might be uploaded next."""
+    # delete_previous_uploads()
+    db(db.cars.id == car_id).update(
+        # owner=get_user_email(),
+        file_path=file_path,
+        confirmed=False,
+    )   
 
 @action('add_car', method="POST")
 @action.uses(db, auth.user, session, url_signer.verify())
 def add_car():
     # redirect(URL('upload_image.html'))
-    print("here")
+    # print("here")
     id = db.cars.insert(
         car_brand=request.json.get('car_brand'),
         car_model=request.json.get('car_model'),

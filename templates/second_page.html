@@ -104,7 +104,7 @@
                                     <div class="columns block is-mobile">
                                         <div class="column is-three-fifth">
                                             <figure class="image">
-                                              <img v-if="y.car_picture" width="50" :src="y.car_picture" 
+                                              <img v-if="y.file_path" width="50" :src="'https://storage.googleapis.com' + y.file_path" 
                                               alt="Placeholder image"/>
                                             </figure>
 
@@ -141,7 +141,6 @@
                                         </button>
                                     </a>
                                 </p>
-
                             </footer>
                         </div>
                         <!--            </a>-->
@@ -165,6 +164,7 @@
         </script>
 
         <script src="js/index.js"></script>
+        <!-- <script src="js/cars.js"></script> -->
         [[end]]
 
     </div>

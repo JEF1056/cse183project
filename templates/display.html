@@ -34,23 +34,27 @@
           <td>{{c.car_mileage}}</td>
           <td>{{c.car_description}}</td>
           <td>
-            <!-- <div v-if="!c.car_picture"> -->
+            <div class="field has-addons">
               <p class="control">
-                <div class="file is-info">
-                  <label class="file-label">
-                    <input class="file-input" type="file"
-                          accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-                          @change="upload_file($event, c._idx)" href="[[=URL('post_your_car')]]">
-                    <span class="file-cta">
-                      <span class="file-label">
-                        <span><i class="fa fa-upload"></i></span>
-                      </span>
-                    </span>
-                  </label>
+                <!-- <label class="label">Picture: </label> -->
+                  <div class="control">
+                  <div class="file is-info">
+                    <label class="file-label">
+                      <input class="file-input" type="file" @change="upload_file($event, c._idx)">
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
+                          <i v-else class="fa fa-upload fa-fw"></i>
+                        </span>
+                        <span class="file-label">
+                          <span v-if="!uploading">Upload new file</span>
+                        </span>
+                      </span> 
+                    </label>
+                  </div>
                 </div>
               </p>
-            <!-- </div>
-            <img v-if="c.car_picture" width="50" :src="c.car_picture" /> -->
+            </div> 
           </td>
           <td>{{c.car_city}}</td>
           <td>{{c.car_zip}}</td>
@@ -86,6 +90,10 @@
   <script>
     let upload_pic_url = "[[=XML(upload_pic_url)]]";
     let load_cars_info = "[[=XML(load_cars_info)]]";
+    let file_info_url = "[[=XML(file_info_url)]]";
+    let obtain_gcs_url = "[[=XML(obtain_gcs_url)]]";
+    let notify_url = "[[=XML(notify_url)]]";
+    let delete_url = "[[=XML(delete_url)]]";
   </script>
   <script src="js/cars.js"></script>
   [[end]]

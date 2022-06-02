@@ -48,7 +48,7 @@
         <div v-for="y in results">
             <div class="card">
                 <div class="card-content">
-                    <b class="is-size-4 is-italic"> {{y.car_year}} {{y.car_brand}} {{y.car_model}}</b>
+                    <b class="is-size-4 is-italic"> {{y.car_year}} {{y.car_brand}} {{y.car_model}} </b>
                 </div>
 
                 <div class="card-image">
@@ -56,7 +56,7 @@
                         <div class="columns block is-mobile">
                             <div class="column is-three-fifth">
                                 <figure class="image">
-                                    <img v-if="y.car_picture" width="50" :src="y.car_picture"
+                                    <img v-if="y.file_path" width="50" :src="'https://storage.googleapis.com' + y.file_path"
                                          alt="Placeholder image"/>
                                 </figure>
                             </div>

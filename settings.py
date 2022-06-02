@@ -21,8 +21,9 @@ DB_FOLDER = required_folder(APP_FOLDER, "databases")
 if "PYDAL_URI" in os.environ:
     DB_URI = os.environ["PYDAL_URI"]
 else:
-    DB_URI = "mysql://root:"+password+"@sv.jfan.ml:34563/test?set_encoding =utf8mb4"
-    #"sqlite://storage.db"
+    DB_URI = "sqlite://storage.db"
+    # "mysql://root:"+password+"@sv.jfan.ml:34563/test?set_encoding =utf8mb4"
+    #
 DB_POOL_SIZE = 1
 DB_MIGRATE = True
 DB_FAKE_MIGRATE = False  # maybe?
