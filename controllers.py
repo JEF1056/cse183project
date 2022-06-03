@@ -125,7 +125,7 @@ def file_info():
     uploaded, if any, so that the user can download it or replace it with
     another file if desired."""
     
-    row = db(db.images.owner == get_user_email()).select().first()
+    row = db(db.cars.created_by == get_user_email()).select().first()
     # The file is present if the row is not None, and if the upload was
     # confirmed.  Otherwise, the file has not been confirmed as uploaded,
     # and should be deleted.
