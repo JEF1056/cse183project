@@ -1,0 +1,176 @@
+[[extend 'auth_layout.html']]
+
+<head>
+
+</head>
+
+<div class="section has-background-white-ter">
+    <!-- Using Breadcrumbs to show which page is current page -->
+    <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <!-- Home Page Icon -->
+                <a href="[[=URL('index')]]">
+          <span class="icon is-small">
+          <i class="fa fa-fw fa-home" aria-hidden="true"></i>
+          </span>
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <!-- Used Cars Page Icon -->
+            <li class="is-active">
+                <a aria-current="page">
+          <span class="icon is-small">
+          <i class="fa fa-fw fa-car" aria-hidden="true"></i>
+          </span>
+                    <span>Used Cars</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+
+    <!-- Filter functions on the right part -->
+    <div class="section" id="vue-target" v-cloak>
+
+        <!-- Start of filter functions -->
+        <div class="control block">
+            <div class="columns block is-mobile ">
+                <!-- TODO having problem that if the number of results increase the length of this column also increase -->
+                <div class="column is-one-fifth has-background-white">
+                    <b>Select A Car Make</b>
+
+                    <select v-model="selected" name="selected" @change="filter">
+                        <option disabled value="">Select A Car Make</option>
+                        [[for r in res:]]
+                        <option>[[=r]]</option>
+                        [[pass]]
+                    </select>
+                    <br/>
+
+                    <b>Type A Car Model</b>
+                    <input class="input" type="text" v-model="car_model" @change="filter"/>
+                    <br/>
+                    <b>Location</b>
+                    <select v-model="range" name="range" @change="filter">
+                        <option disabled value="">Within</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>150</option>
+                        <option>200</option>
+                        <option>250</option>
+                        <option>500</option>
+                    </select>
+                    <b> miles of </b>
+                    <input class="input" type="number" v-model="city" @change="filter"/>
+                    <br/>
+
+                    <b>Year</b>
+                    <br/>
+                    <input class="input" type="number" v-model="min_year" @change="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_year" @change="filter" style = "width: 94px"/>
+                    <br/>
+
+                    <b>Price</b>
+                    <br/>
+                    <input class="input" type="number" v-model="min_price" @change="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_price" @change="filter" style = "width: 94px;"/>
+                    <br/>
+
+                    <b>Mileage</b>
+                    <br/>
+                    <input class="input" type="number" v-model="min_mil" @change="filter" style = "width: 94px;"/><span>to</span><input class="input" type="number" v-model="max_mil" @change="filter" style = "width: 94px;"/>
+                    <div class = "block pt-4">
+                        <div class = "button is-light">
+                            Apply
+                        </div>
+                    </div>
+                </div>
+                <!-- End of filter functions -->
+
+                <!-- Display filter results on the right part -->
+                <div class="column is-four-fifth">
+                    <div v-for="y in results">
+
+                        <!-- Card buttons to detail description page -->
+                        <!--          <a href="[[=URL('car_description_page')]]">-->
+                        <div class="card">
+                            <div class="card-content">
+                                <b class="is-size-4 is-italic has-text-info"> {{y.car_year}} {{y.car_brand}}
+                                    {{y.car_model}}</b>
+                            </div>
+
+                            <div class="card-image">
+                                <div class="column">
+                                    <div class="columns block is-mobile">
+                                        <div class="column is-three-fifth">
+                                            <figure class="image">
+                                              <img v-if="y.file_path" width="50" :src="'https://storage.googleapis.com' + y.file_path" 
+                                              alt="Placeholder image"/>
+                                            </figure>
+
+                                        </div>
+
+                                        <div class="column is-two-fifth">
+                                            <div class="card-content">
+                                                <div class="content">
+                                                    <div class="block"><h3> Price: ${{y.car_price}}</h3></div>
+                                                    <div class="block"><b>Mileage: </b> {{y.car_mileage}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- add bookmark button -->
+                            <!-- TODO edit BookMark -->
+                            <footer class="card-footer">
+                                <p class="card-footer-item">
+                                    <a class="card-footer-item has-text-grey" :href="y.car_url">
+                                        <button class="button is-text">
+                                            <span class="icon"><i class="fa fa-fw fa-info"></i></span>
+                                            <span>MoreDetail</span>
+                                        </button>
+                                    </a>
+                                    <a :href="'[[=URL("add_bookmark")]]' + '/' + y.id" class="card-footer-item has-text-grey">
+                                        <button class="button is-text">
+                                            <span class="icon">
+                                                <i v-if="!y.marked_by.includes(current_user)" class="fa fa-fw fa-bookmark"></i>
+                                                <i v-else class="fa fa-bookmark has-text-info"></i>
+                                            </span>
+                                            <span>BookMark</span>
+                                        </button>
+                                    </a>
+                                </p>
+                            </footer>
+                        </div>
+                        <!--            </a>-->
+                        <!-- Start a new space for every car in every loop -->
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        
+
+        [[block page_scripts]]
+        <!-- Loads the index-specific js for Vue -->
+        <script>
+            let filter_url = "[[=XML(filter_url)]]";
+            let load_cars = "[[=XML(load_cars)]]";
+            let get_cars_url = "[[=XML(get_cars_url)]]";
+        </script>
+
+        <script src="js/index.js"></script>
+        <!-- <script src="js/cars.js"></script> -->
+        [[end]]
+
+    </div>
+</div>

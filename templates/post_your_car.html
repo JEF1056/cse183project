@@ -1,0 +1,123 @@
+[[extend 'auth_layout.html']]
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post_Your_Car_Page</title>
+</head>
+
+<body>
+<div class="section">
+    <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
+        <ul>
+            <!-- Home Page Icon -->
+            <li>
+                <a href="[[=URL('index')]]">
+                    <span class="icon is-small">
+                    <i class="fa fa-fw fa-home" aria-hidden="true"></i>
+                     </span>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <!-- Used Car Page Icon -->
+                <a href="[[=URL('second_page')]]">
+                    <span class="icon is-small">
+                        <i class="fa fa-fw fa-car" aria-hidden="true"></i>
+                    </span>
+                    <span>Used Cars</span>
+                </a>
+            </li>
+
+            <!-- Used Cars Page Icon -->
+            <li class="is-active">
+                <a aria-current="page">
+                      <span class="icon is-small">
+                          <i class="fa fa-fw fa-car" aria-hidden="true"></i>
+                      </span>
+                    Posted car(s) by you
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+<div class="container">
+
+    <div class="title">Cars posted by [[=first_name]] [[=last_name]]</div>
+
+    <div class="block">
+        <a class="button is-success" href="[[=URL('add')]]">
+            <span class="icon"><i class="fa fa-plus"></i></span>
+            <span>Post Your Car</span>
+        </a>
+    </div>
+
+    [[for row in rows:]]
+
+    <!-- Card buttons to detail description page -->
+    <div class="card">
+        <div class="card-content">
+            <b class="is-size-4 is-italic"> [[=row.car_year]] [[=row.car_brand]] [[=row.car_model]] </b>
+        </div>
+
+        <div class="card-image">
+            <div class="column">
+                <div class="columns block is-mobile">
+                    <div class="column is-three-fifth">
+                        <figure class="image">
+                            <img width="50" src="https://storage.googleapis.com[[=row.file_path]]"
+                                 alt="Placeholder image"/>
+                        </figure>
+                    </div>
+
+                    <div class="column is-two-fifth">
+                        <div class="card-content">
+                            <div class="content">
+                                <div class="block"><b> Price: </b>$[[=row.car_price]]</div>
+                                <div class="block"><b>Mileage: </b> [[=row.car_mileage]]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- add bookmark button -->
+        <!-- TODO change it to BookMark to sign in user -->
+        <footer class="card-footer">
+            <p class="card-footer-item">
+                <a href="[[=URL('car_description_page', row.id)]]" class="card-footer-item has-text-grey">
+                    <button class="button is-text">
+                        <span class="icon"><i class="fa fa-fw fa-info"></i></span>
+                        <span>MoreDetail</span>
+                    </button>
+                </a>
+                <a href="[[=URL('edit', row.id, signer = url_signer)]]" class="card-footer-item has-text-grey">
+                    <button class="button is-text">
+                        <span class="icon"><i class="fa fa-fw fa-pencil-square-o"></i></span>
+                        <span>Edit Information</span>
+                    </button>
+                </a>
+                <a href="[[=URL('delete', row.id, signer = url_signer)]]" class="card-footer-item has-text-grey">
+                    <button class="button is-text">
+                        <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+                        <span>Delete Post</span>
+                    </button>
+                </a>
+            </p>
+        </footer>
+
+    </div>
+    <br>
+    [[pass]]
+
+    <a class="button is-warning" href="[[=URL('second_page')]]">
+        <span class="icon"><i class="fa fa-fw fa-backward"></i></span>
+        <span>Back</span>
+    </a>
+
+
+</div>
+</body>
+</html>
