@@ -7,7 +7,7 @@ Here is our YouTube description video:
 [Project Description](https://youtu.be/DdimBRNf2JI)
 
 Here is the deployed version of our project:
-[Deployed Version](http://sv.jfan.ml:47843/cse183/second_page](http://sv.jfan.ml:47843/cse183/index)
+[Deployed Version](http://sv.jfan.ml:47843/cse183/second_page](http://sv.jfan.ml:47843/cse183)
 
 Here is the detailed project description of our project:
 [Detailed Project Description](https://docs.google.com/document/d/1wfmm9xjsA9VZWinmS5HFJ8-wSDJA9Ay8VN4sFJ8QIO0/edit?usp=sharing)
