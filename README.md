@@ -1,11 +1,11 @@
 # Used Car Website (Group 19) 
 ## Team Members (In the alphabetical order of surnames)
-- Juan Duque,juduque@ucsc.edu
-- Jess Fan,&emsp; &ensp; jeefan@ucsc.edu
-- Xufan Huang,  xhuang92@ucsc.edu
-- Jose Jimenez, jocjimen@ucsc.edu
-- Hanhui Song,  hsong42@ucsc.edu
-- Peiqu Su,     psu5@ucsc.edu
+- Juan Duque,   (juduque@ucsc.edu)
+- Jess Fan,     (jeefan@ucsc.edu)
+- Xufan Huang,  (xhuang92@ucsc.edu)
+- Jose Jimenez, (jocjimen@ucsc.edu)
+- Hanhui Song,  (hsong42@ucsc.edu)
+- Peiqu Su,     (psu5@ucsc.edu)
 
 ## Important Links
 Here is our YouTube description video:
