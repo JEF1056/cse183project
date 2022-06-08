@@ -87,19 +87,17 @@ def second_page():
                 get_cars_url=URL('get_cars', signer=url_signer),
                 )
 
-@action('display')
+@action('display/<cars_id:int>')
 @action.uses('display.html', url_signer, db)
-def display():
-  car = db(db.cars.created_by).select().as_list()[-1]
-  id = car['id']  
-  # print("id in dis", car, id)
-
+def display(cars_id=None):
+  assert cars_id is not None
+  car = db(db.cars.id == cars_id).select()
+ 
   return dict(
-    id=id,
     car=car,
+    cars_id=cars_id,
     load_cars_info=URL('load_cars_info', signer=url_signer),  
     upload_pic_url=URL('upload_pic', signer=url_signer),
-    file_info_url = URL('file_info', signer=url_signer),
     obtain_gcs_url = URL('obtain_gcs', signer=url_signer),
     notify_url = URL('notify_upload', signer=url_signer),
     delete_url = URL('notify_delete', signer=url_signer),
@@ -253,8 +251,7 @@ def mark_possible_upload(file_path, car_id):
 @action('add_car', method="POST")
 @action.uses(db, auth.user, session, url_signer.verify())
 def add_car():
-    # redirect(URL('upload_image.html'))
-    # print("here")
+
     id = db.cars.insert(
         car_brand=request.json.get('car_brand'),
         car_model=request.json.get('car_model'),
@@ -266,14 +263,11 @@ def add_car():
         car_city=request.json.get('car_city'),
         car_zip=request.json.get('car_zip'),
     )
-    # redirect(URL('upload_image'))
+
     ID = id
     return dict(
         id=id,
     )
-    # load_cars_info=URL('load_cars_info', signer=url_signer),
-    # upload_pic_url=URL('upload_pic', signer=url_signer))
-
 
 @action('upload_image')
 @action.uses('upload_image.html', auth.user, session)
@@ -323,7 +317,7 @@ def edit_car():
   car_description=request.json.get('car_description')
   # car_picture=request.json.get('car_picture')
   car_city=request.json.get('car_city')
-  car_zip=request.json.get('car_zip')
+  # car_zip=request.json.get('car_zip')
 
   db(db.cars.id == id).update(
     car_brand=car_brand,
@@ -333,7 +327,7 @@ def edit_car():
     car_mileage=car_mileage,
     car_description=car_description,
     car_city=car_city,
-    car_zip=car_zip,
+    # car_zip=car_zip,
   )
   return "ok"
 

@@ -18,14 +18,12 @@
           <th>Mileage</th>
           <th>Description</th>
           <th>Picture</th>
-          <th>City</th>
           <th>Zip Code</th>
-          <th>Created By</th>
-          <th>Creation Date</th> 
           <th></th>
           <th></th>
         </tr> 
         <tr v-for="c in cars" :key="c.id">
+          <template v-if="c.id === [[=cars_id]]">
           <td>{{c.id}}</td>
           <td>{{c.car_brand}}</td>
           <td>{{c.car_model}}</td>
@@ -58,7 +56,8 @@
           </td>
           <td>{{c.car_city}}</td>
           <td>{{c.car_zip}}</td>
-          </tr>
+          </template>
+        </tr>
       </table>
       <article class="message is-warning">
         <div class="message-header">
@@ -90,7 +89,7 @@
   <script>
     let upload_pic_url = "[[=XML(upload_pic_url)]]";
     let load_cars_info = "[[=XML(load_cars_info)]]";
-    let file_info_url = "[[=XML(file_info_url)]]";
+   
     let obtain_gcs_url = "[[=XML(obtain_gcs_url)]]";
     let notify_url = "[[=XML(notify_url)]]";
     let delete_url = "[[=XML(delete_url)]]";

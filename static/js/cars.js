@@ -314,7 +314,7 @@ let setup = (carApp) => {
       }
     }
     // let car = carApp.vue.cars[id];
-    console.log("car", car);
+    // console.log("car", car);
     axios.post(edit_car_url, {
       id: car.id,  
       car_brand: carApp.vue.add_car_brand,
@@ -324,7 +324,7 @@ let setup = (carApp) => {
       car_mileage: carApp.vue.add_car_mileage,
       car_description: carApp.vue.add_car_description,
       car_city: carApp.vue.add_car_city,
-      car_zip: carApp.vue.add_car_zip,
+      // car_zip: carApp.vue.add_car_zip,
     }).then(function (response) {
       // console.log("in response");
       console.log(response);

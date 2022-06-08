@@ -51,7 +51,7 @@
       
       <div class="field">
         <div class="control">
-          <a class="button is-success" @click="edit_car([[=c.id]])" href="[[=URL('display')]]">
+          <a class="button is-success" @click="edit_car([[=c.id]])" href="[[=URL('display', c.id)]]">
             <span class="icon"><i class="fa fa-plus"></i></span>
             <span>Edit</span>
           </a>
