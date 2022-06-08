@@ -19,7 +19,7 @@ website, and we did use it as a good example in our project.
 ## Functionality:
 
 - Main page:
-	The first page of our website. When the user login with their account, they can visit this page. 
+	- The first page of our website. When the user login with their account, they can visit this page. 
 
 - Second Page:
 	- Users can use the filter function to find the car they like on this page. 
@@ -27,17 +27,17 @@ website, and we did use it as a good example in our project.
 	- Users can also bookmark the car they like. 
 
 - More Detail Page:
-	This page shows more information about a particular car. 
+	- This page shows more information about a particular car. 
 
 - Bookmarks Page：
-	This page shows the cars that the user bookmarked, and users also can delete any bookmark they made before. 
+	- This page shows the cars that the user bookmarked, and users also can delete any bookmark they made before. 
 
 - Post Car Page：
-	The users can post the car they want to sell on this page, and they can also edit any information about the vehicle 
+	- The users can post the car they want to sell on this page, and they can also edit any information about the vehicle 
 	they already posted. 
 
 - Feedback Page：
-	Users can post their comments for our website here on this page. 
+	- Users can post their comments for our website here on this page. 
 
 ## How to Test It:
 You could download our main repository as a “zip” file; You should get another file called “cse183project-main” if you 
